@@ -387,9 +387,9 @@
 <body>
 
 <div class="hero">
-  <div class="badge">💪 JS Workout</div>
+  <img width="300" src="images/edure-logo-2.png" alt="">
   <h1>JavaScript <span>Practice</span> Problems</h1>
-  <p class="subtitle">15 hands-on problems to sharpen your fundamentals. Read the guidance if you're stuck!</p>
+  <p class="subtitle">33 hands-on problems to sharpen your fundamentals. Read the guidance if you're stuck!</p>
 </div>
 
 <div class="filter-bar">
@@ -405,7 +405,7 @@
 <div class="progress-section">
   <div class="progress-label">
     <span>Progress</span>
-    <span id="progress-text">0 / 15 solved</span>
+    <span id="progress-text">0 / 33 solved</span>
   </div>
   <div class="progress-bar-bg">
     <div class="progress-bar-fill" id="progress-fill"></div>
@@ -1330,6 +1330,9 @@ function renderCard(p, index) {
 // Render all cards
 const grid = document.getElementById('grid');
 grid.innerHTML = problems.map((p, i) => renderCard(p, i)).join('');
+
+// Set progress label dynamically from actual array length
+document.getElementById('progress-text').textContent = `0 / ${problems.length} solved`;
 
 // Guidance toggle
 function toggleGuidance(btn) {
