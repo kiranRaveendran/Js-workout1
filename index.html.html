@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JS Workout Problems</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a12;
+    --surface: #12121e;
+    --card: #1a1a2e;
+    --border: #2a2a45;
+    --accent: #5b5bf5;
+    --accent2: #f5a623;
+    --accent3: #2dd4bf;
+    --text: #e8e8f0;
+    --muted: #6b6b88;
+    --green: #22d3a5;
+    --red: #f55b5b;
+    --yellow: #f5d65b;
+    --tag-var: #5b5bf5;
+    --tag-scope: #f5a623;
+    --tag-op: #f55b5b;
+    --tag-type: #2dd4bf;
+    --tag-fn: #22d3a5;
+    --tag-decl: #c084fc;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(91,91,245,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(91,91,245,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 60px 20px 40px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(91,91,245,0.15);
+    border: 1px solid rgba(91,91,245,0.4);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    padding: 5px 14px;
+    border-radius: 20px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 1.05rem;
+    font-weight: 300;
+    max-width: 500px;
+    margin: 0 auto 32px;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0 20px 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .filter-btn[data-topic="variables"].active { background: var(--tag-var); border-color: var(--tag-var); }
+  .filter-btn[data-topic="scope"].active { background: var(--tag-scope); border-color: var(--tag-scope); color: #0a0a12; }
+  .filter-btn[data-topic="operators"].active { background: var(--tag-op); border-color: var(--tag-op); }
+  .filter-btn[data-topic="types"].active { background: var(--tag-type); border-color: var(--tag-type); color: #0a0a12; }
+  .filter-btn[data-topic="functions"].active { background: var(--tag-fn); border-color: var(--tag-fn); color: #0a0a12; }
+  .filter-btn[data-topic="declarations"].active { background: var(--tag-decl); border-color: var(--tag-decl); }
+
+  /* Progress bar */
+  .progress-section {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-family: 'Space Mono', monospace;
+  }
+  .progress-bar-bg {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* Grid */
+  .problems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    animation: fadeUp 0.5s ease both;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(91,91,245,0.4);
+    box-shadow: 0 8px 40px rgba(91,91,245,0.12);
+  }
+  .card.solved {
+    border-color: rgba(34, 211, 165, 0.4);
+    box-shadow: 0 4px 20px rgba(34,211,165,0.08);
+  }
+  .card.hidden { display: none; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-header {
+    padding: 16px 20px 14px;
+    background: rgba(0,0,0,0.2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .problem-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: rgba(255,255,255,0.05);
+    padding: 3px 8px;
+    border-radius: 6px;
+    min-width: 40px;
+    text-align: center;
+  }
+
+  .problem-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    flex: 1;
+    line-height: 1.3;
+  }
+
+  .topic-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .tag-variables { background: rgba(91,91,245,0.2); color: #8b8bf8; border: 1px solid rgba(91,91,245,0.3); }
+  .tag-scope { background: rgba(245,166,35,0.15); color: #f5a623; border: 1px solid rgba(245,166,35,0.3); }
+  .tag-operators { background: rgba(245,91,91,0.15); color: #f58b8b; border: 1px solid rgba(245,91,91,0.3); }
+  .tag-types { background: rgba(45,212,191,0.15); color: #2dd4bf; border: 1px solid rgba(45,212,191,0.3); }
+  .tag-functions { background: rgba(34,211,165,0.15); color: #22d3a5; border: 1px solid rgba(34,211,165,0.3); }
+  .tag-declarations { background: rgba(192,132,252,0.15); color: #c084fc; border: 1px solid rgba(192,132,252,0.3); }
+
+  .card-body { padding: 18px 20px; }
+
+  .problem-desc {
+    font-size: 0.9rem;
+    color: #c8c8d8;
+    line-height: 1.65;
+    margin-bottom: 14px;
+  }
+
+  /* Code block */
+  .code-block {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: #ccd6f6;
+    margin-bottom: 14px;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code-block .kw { color: #c792ea; }
+  .code-block .fn { color: #82aaff; }
+  .code-block .str { color: #c3e88d; }
+  .code-block .num { color: #f78c6c; }
+  .code-block .cmt { color: #546e7a; font-style: italic; }
+  .code-block .blank { 
+    background: rgba(91,91,245,0.2); 
+    border: 1px dashed rgba(91,91,245,0.5); 
+    border-radius: 4px;
+    padding: 0 8px;
+    color: var(--accent);
+  }
+
+  /* Guidance accordion */
+  .guidance-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 8px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: all 0.2s;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .guidance-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .guidance-toggle svg { transition: transform 0.25s; flex-shrink: 0; }
+  .guidance-toggle.open svg { transform: rotate(180deg); }
+  .guidance-toggle.open { border-color: var(--accent); color: var(--accent); }
+
+  .guidance-panel {
+    display: none;
+    background: rgba(91,91,245,0.06);
+    border: 1px solid rgba(91,91,245,0.2);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .guidance-panel.open { display: block; animation: slideDown 0.2s ease; }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .guidance-panel ol {
+    padding-left: 20px;
+    margin: 0;
+  }
+  .guidance-panel li {
+    font-size: 0.84rem;
+    color: #aab0c8;
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+  .guidance-panel li:last-child { margin-bottom: 0; }
+  .guidance-panel li strong { color: var(--accent3); font-weight: 600; }
+  .guidance-panel li code {
+    background: rgba(0,0,0,0.3);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: #c3e88d;
+  }
+
+  /* Solved checkbox */
+  .card-footer {
+    padding: 0 20px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .done-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    flex: 1;
+    justify-content: center;
+  }
+  .done-btn:hover { border-color: var(--green); color: var(--green); }
+  .done-btn.solved {
+    background: rgba(34,211,165,0.12);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .difficulty {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .dot.lit.easy { background: var(--green); }
+  .dot.lit.medium { background: var(--yellow); }
+  .dot.lit.hard { background: var(--red); }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-family: 'Space Mono', monospace;
+    position: relative;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">💪 JS Workout</div>
+  <h1>JavaScript <span>Practice</span> Problems</h1>
+  <p class="subtitle">15 hands-on problems to sharpen your fundamentals. Read the guidance if you're stuck!</p>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" data-topic="all">All (33)</button>
+  <button class="filter-btn" data-topic="variables">Variables</button>
+  <button class="filter-btn" data-topic="declarations">Declaration Keywords</button>
+  <button class="filter-btn" data-topic="scope">Scope</button>
+  <button class="filter-btn" data-topic="operators">Operators</button>
+  <button class="filter-btn" data-topic="types">Data Types</button>
+  <button class="filter-btn" data-topic="functions">Built-in Functions</button>
+</div>
+
+<div class="progress-section">
+  <div class="progress-label">
+    <span>Progress</span>
+    <span id="progress-text">0 / 15 solved</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progress-fill"></div>
+  </div>
+</div>
+
+<div class="problems-grid" id="grid"></div>
+
+<footer>JS Workout Problems • Variables · Scope · Operators · Types · Built-ins</footer>
+
+<script>
+const problems = [
+  {
+    id: 1,
+    title: "Name & Greet",
+    topic: "variables",
+    difficulty: "easy",
+    desc: "Create a variable to store your name, then use it to build a greeting message. Print the result to the console.",
+    code: `<span class="kw">let</span> name = <span class="blank">___</span>;
+<span class="kw">let</span> greeting = <span class="str">"Hello, "</span> + <span class="blank">___</span> + <span class="str">"!"</span>;
+console.<span class="fn">log</span>(greeting);`,
+    guidance: [
+      "Assign your <strong>name</strong> as a string using quotes: <code>\"Your Name\"</code>",
+      "Use the <strong>+</strong> operator to join strings — this is called <strong>concatenation</strong>",
+      "The variable <code>name</code> holds your value — refer to it by name (no quotes!) in the second line",
+      "Expected output: <code>Hello, Alex!</code> (or whatever name you chose)"
+    ]
+  },
+  {
+    id: 2,
+    title: "const vs let",
+    topic: "declarations",
+    difficulty: "easy",
+    desc: "Declare a birthYear with const (it never changes) and an age with let (it can change). Then update the age by 1.",
+    code: `<span class="kw">const</span> birthYear = <span class="blank">___</span>;
+<span class="kw">let</span> age = <span class="blank">___</span>;
+
+age = age + <span class="num">1</span>; <span class="cmt">// birthday!</span>
+console.<span class="fn">log</span>(<span class="str">"Next year you'll be:"</span>, age);`,
+    guidance: [
+      "Use <code>const</code> for values that <strong>never change</strong> (like birth year)",
+      "Use <code>let</code> for values that <strong>can change</strong> (like age)",
+      "Try reassigning <code>birthYear</code> — notice the error? That's <code>const</code> protecting it!",
+      "Fill in real numbers: e.g., <code>birthYear = 2001</code> and <code>age = 23</code>"
+    ]
+  },
+  {
+    id: 3,
+    title: "var Hoisting Trap",
+    topic: "declarations",
+    difficulty: "medium",
+    desc: "Predict what logs before fixing it. var is hoisted — understand why this is tricky vs let.",
+    code: `console.<span class="fn">log</span>(score); <span class="cmt">// What prints here?</span>
+<span class="kw">var</span> score = <span class="num">100</span>;
+console.<span class="fn">log</span>(score); <span class="cmt">// And here?</span>
+
+<span class="cmt">// Now try the same with let:</span>
+console.<span class="fn">log</span>(points); <span class="cmt">// What happens now?</span>
+<span class="kw">let</span> points = <span class="num">50</span>;`,
+    guidance: [
+      "<code>var</code> is <strong>hoisted</strong> — it's moved to the top of its scope, but only the declaration, not the value",
+      "So the first <code>console.log(score)</code> prints <code>undefined</code>, not 100",
+      "<code>let</code> is also hoisted but stays in a <strong>Temporal Dead Zone</strong> — accessing it early throws a <code>ReferenceError</code>",
+      "Run the <code>var</code> version first, then comment it out and try the <code>let</code> version to see the difference"
+    ]
+  },
+  {
+    id: 4,
+    title: "Scope Detective",
+    topic: "scope",
+    difficulty: "medium",
+    desc: "Figure out which variables are accessible where. Fill in the blanks with what each console.log will print — or if it will error.",
+    code: `<span class="kw">let</span> city = <span class="str">"Paris"</span>; <span class="cmt">// global scope</span>
+
+<span class="kw">function</span> <span class="fn">travel</span>() {
+  <span class="kw">let</span> hotel = <span class="str">"Grand"</span>; <span class="cmt">// local scope</span>
+  console.<span class="fn">log</span>(city);  <span class="cmt">// prints: ___</span>
+  console.<span class="fn">log</span>(hotel); <span class="cmt">// prints: ___</span>
+}
+
+<span class="fn">travel</span>();
+console.<span class="fn">log</span>(city);  <span class="cmt">// prints: ___</span>
+console.<span class="fn">log</span>(hotel); <span class="cmt">// prints: ___</span>`,
+    guidance: [
+      "<strong>Global scope</strong>: variables declared outside functions are accessible everywhere",
+      "<strong>Local/Function scope</strong>: variables declared inside a function only live inside that function",
+      "<code>city</code> is global → accessible inside and outside the function",
+      "<code>hotel</code> is local → only accessible inside <code>travel()</code>, calling it outside will cause a <code>ReferenceError</code>"
+    ]
+  },
+  {
+    id: 5,
+    title: "Block Scope with let",
+    topic: "scope",
+    difficulty: "medium",
+    desc: "Explore how let and var behave differently inside an if block.",
+    code: `<span class="kw">if</span> (<span class="kw">true</span>) {
+  <span class="kw">var</span> x = <span class="num">10</span>;
+  <span class="kw">let</span> y = <span class="num">20</span>;
+}
+
+console.<span class="fn">log</span>(x); <span class="cmt">// prints: ___</span>
+console.<span class="fn">log</span>(y); <span class="cmt">// prints: ___</span>`,
+    guidance: [
+      "<code>var</code> has <strong>function scope</strong> — it leaks out of <code>if</code> blocks, loops, etc.",
+      "<code>let</code> has <strong>block scope</strong> — it stays inside <code>{ }</code> and can't be accessed outside",
+      "So <code>x</code> is accessible outside the block (prints 10), but <code>y</code> throws a <code>ReferenceError</code>",
+      "This is why modern JS prefers <code>let</code> and <code>const</code> over <code>var</code>"
+    ]
+  },
+  {
+    id: 6,
+    title: "Type Check",
+    topic: "types",
+    difficulty: "easy",
+    desc: "Use typeof to inspect different values. Fill in what typeof will return for each.",
+    code: `console.<span class="fn">log</span>(<span class="kw">typeof</span> <span class="num">42</span>);          <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(<span class="kw">typeof</span> <span class="str">"hello"</span>);     <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(<span class="kw">typeof</span> <span class="kw">true</span>);        <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(<span class="kw">typeof</span> <span class="kw">undefined</span>);  <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(<span class="kw">typeof</span> <span class="kw">null</span>);       <span class="cmt">// ⚠️ surprise!</span>
+console.<span class="fn">log</span>(<span class="kw">typeof</span> [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>]);    <span class="cmt">// ⚠️ surprise!</span>`,
+    guidance: [
+      "<code>typeof</code> always returns a <strong>string</strong> like <code>\"number\"</code>, <code>\"string\"</code>, <code>\"boolean\"</code>",
+      "<code>typeof null</code> returns <code>\"object\"</code> — this is a historic JavaScript bug, not intuitive!",
+      "<code>typeof [1,2,3]</code> also returns <code>\"object\"</code> — arrays are objects in JS",
+      "To properly check for arrays use: <code>Array.isArray([1,2,3])</code> → <code>true</code>"
+    ]
+  },
+  {
+    id: 7,
+    title: "String ↔ Number Conversion",
+    topic: "types",
+    difficulty: "easy",
+    desc: "Convert between strings and numbers using built-in functions. Spot the type coercion trap!",
+    code: `<span class="kw">let</span> strNum = <span class="str">"42"</span>;
+<span class="kw">let</span> realNum = <span class="fn">Number</span>(strNum);
+console.<span class="fn">log</span>(realNum + <span class="num">8</span>); <span class="cmt">// should be 50</span>
+
+<span class="kw">let</span> n = <span class="num">100</span>;
+<span class="kw">let</span> s = <span class="fn">String</span>(n);
+console.<span class="fn">log</span>(s + <span class="str">"px"</span>);   <span class="cmt">// should be "100px"</span>
+
+<span class="cmt">// 🚨 Coercion trap:</span>
+console.<span class="fn">log</span>(<span class="str">"5"</span> + <span class="num">3</span>);   <span class="cmt">// "53" or 8?</span>
+console.<span class="fn">log</span>(<span class="str">"5"</span> - <span class="num">3</span>);   <span class="cmt">// "53" or 2?</span>`,
+    guidance: [
+      "Use <code>Number(\"42\")</code> to convert a string to a number — same as <code>parseInt()</code> or <code>parseFloat()</code>",
+      "Use <code>String(100)</code> or <code>100 + \"\"</code> to convert a number to a string",
+      "<strong>Coercion trap</strong>: <code>+</code> with a string triggers <strong>concatenation</strong> → <code>\"5\" + 3 = \"53\"</code>",
+      "But <code>-</code> forces numeric conversion → <code>\"5\" - 3 = 2</code>. JS converts the string automatically!"
+    ]
+  },
+  {
+    id: 8,
+    title: "Arithmetic Operators",
+    topic: "operators",
+    difficulty: "easy",
+    desc: "Use all the arithmetic operators to calculate a receipt. Fill in the blanks using: +, -, *, /, %",
+    code: `<span class="kw">let</span> price = <span class="num">80</span>;
+<span class="kw">let</span> discount = <span class="num">15</span>;
+<span class="kw">let</span> tax = <span class="num">0.1</span>;
+
+<span class="kw">let</span> afterDiscount = price <span class="blank">___</span> discount;
+<span class="kw">let</span> taxAmount = afterDiscount <span class="blank">___</span> tax;
+<span class="kw">let</span> total = afterDiscount <span class="blank">___</span> taxAmount;
+<span class="kw">let</span> remainder = total <span class="blank">___</span> <span class="num">3</span>; <span class="cmt">// splitting bill 3 ways</span>
+
+console.<span class="fn">log</span>(<span class="str">"Total:"</span>, total);
+console.<span class="fn">log</span>(<span class="str">"Leftover cents remainder:"</span>, remainder);`,
+    guidance: [
+      "Use <code>-</code> to subtract the discount from price",
+      "Use <code>*</code> to multiply for the tax amount (10%)",
+      "Use <code>+</code> to add tax to get the final total",
+      "Use <code>%</code> (modulo) to get the remainder after dividing by 3 — useful for splitting bills!"
+    ]
+  },
+  {
+    id: 9,
+    title: "Comparison Operators",
+    topic: "operators",
+    difficulty: "medium",
+    desc: "Use == vs === and understand the difference. Predict each result before running.",
+    code: `console.<span class="fn">log</span>(<span class="num">5</span> == <span class="str">"5"</span>);   <span class="cmt">// ___ (loose)</span>
+console.<span class="fn">log</span>(<span class="num">5</span> === <span class="str">"5"</span>);  <span class="cmt">// ___ (strict)</span>
+console.<span class="fn">log</span>(<span class="num">5</span> === <span class="num">5</span>);   <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(<span class="num">0</span> == <span class="kw">false</span>); <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(<span class="num">0</span> === <span class="kw">false</span>);<span class="cmt">// ___</span>
+console.<span class="fn">log</span>(<span class="str">""</span> == <span class="kw">false</span>); <span class="cmt">// ___</span>`,
+    guidance: [
+      "<code>==</code> is <strong>loose equality</strong> — it converts types before comparing (type coercion)",
+      "<code>===</code> is <strong>strict equality</strong> — compares both value AND type, no conversion",
+      "<code>5 == \"5\"</code> is <code>true</code> because JS converts the string to a number first",
+      "<code>5 === \"5\"</code> is <code>false</code> because number ≠ string type",
+      "<strong>Best practice</strong>: always use <code>===</code> to avoid surprising bugs!"
+    ]
+  },
+  {
+    id: 10,
+    title: "Logical Operators",
+    topic: "operators",
+    difficulty: "medium",
+    desc: "Fill in the blanks using &&, ||, ! to make each statement true.",
+    code: `<span class="kw">let</span> isLoggedIn = <span class="kw">true</span>;
+<span class="kw">let</span> isAdmin = <span class="kw">false</span>;
+
+<span class="cmt">// Should be true: user is logged in AND admin</span>
+console.<span class="fn">log</span>(isLoggedIn <span class="blank">___</span> isAdmin);
+
+<span class="cmt">// Should be true: logged in OR admin</span>
+console.<span class="fn">log</span>(isLoggedIn <span class="blank">___</span> isAdmin);
+
+<span class="cmt">// Should be true: user is NOT an admin</span>
+console.<span class="fn">log</span>(<span class="blank">___</span>isAdmin);
+
+<span class="cmt">// Short-circuit: what does this return?</span>
+<span class="kw">let</span> name = <span class="kw">null</span>;
+console.<span class="fn">log</span>(name || <span class="str">"Guest"</span>); <span class="cmt">// ___</span>`,
+    guidance: [
+      "<code>&&</code> (AND) — both sides must be <strong>truthy</strong> for the result to be <code>true</code>",
+      "<code>||</code> (OR) — at least one side must be <strong>truthy</strong>",
+      "<code>!</code> (NOT) — flips the boolean: <code>!true → false</code>",
+      "<strong>Short-circuit</strong>: <code>null || \"Guest\"</code> returns <code>\"Guest\"</code> because <code>null</code> is falsy — great for default values!"
+    ]
+  },
+  {
+    id: 11,
+    title: "String Methods",
+    topic: "functions",
+    difficulty: "easy",
+    desc: "Use built-in string methods to transform and inspect a sentence.",
+    code: `<span class="kw">let</span> sentence = <span class="str">"  JavaScript is Awesome!  "</span>;
+
+console.<span class="fn">log</span>(sentence.<span class="fn">trim</span>());
+console.<span class="fn">log</span>(sentence.<span class="fn">toLowerCase</span>());
+console.<span class="fn">log</span>(sentence.<span class="fn">toUpperCase</span>());
+console.<span class="fn">log</span>(sentence.<span class="fn">includes</span>(<span class="str">"Awesome"</span>));
+console.<span class="fn">log</span>(sentence.<span class="fn">replace</span>(<span class="str">"Awesome"</span>, <span class="str">"Cool"</span>));
+console.<span class="fn">log</span>(sentence.<span class="fn">length</span>); <span class="cmt">// property, not method!</span>`,
+    guidance: [
+      "<code>.trim()</code> removes whitespace from both ends of a string",
+      "<code>.toLowerCase()</code> and <code>.toUpperCase()</code> change the case",
+      "<code>.includes(\"Awesome\")</code> returns <code>true</code> or <code>false</code>",
+      "<code>.replace(old, new)</code> swaps the first occurrence of a substring",
+      "<code>.length</code> is a <strong>property</strong> (no parentheses!) — returns the number of characters"
+    ]
+  },
+  {
+    id: 12,
+    title: "Number Methods & Math",
+    topic: "functions",
+    difficulty: "easy",
+    desc: "Use the Math object and Number methods to work with numeric values.",
+    code: `<span class="kw">let</span> price = <span class="num">19.956</span>;
+
+console.<span class="fn">log</span>(price.<span class="fn">toFixed</span>(<span class="num">2</span>));       <span class="cmt">// round to 2 decimals</span>
+console.<span class="fn">log</span>(Math.<span class="fn">round</span>(<span class="num">4.6</span>));        <span class="cmt">// round to nearest int</span>
+console.<span class="fn">log</span>(Math.<span class="fn">floor</span>(<span class="num">4.9</span>));        <span class="cmt">// round DOWN</span>
+console.<span class="fn">log</span>(Math.<span class="fn">ceil</span>(<span class="num">4.1</span>));         <span class="cmt">// round UP</span>
+console.<span class="fn">log</span>(Math.<span class="fn">max</span>(<span class="num">3</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">7</span>));  <span class="cmt">// largest</span>
+console.<span class="fn">log</span>(Math.<span class="fn">min</span>(<span class="num">3</span>, <span class="num">9</span>, <span class="num">1</span>, <span class="num">7</span>));  <span class="cmt">// smallest</span>
+console.<span class="fn">log</span>(Math.<span class="fn">random</span>());          <span class="cmt">// 0 to 1</span>`,
+    guidance: [
+      "<code>.toFixed(2)</code> returns a <strong>string</strong> with exactly 2 decimal places — great for currency!",
+      "<code>Math.round()</code> rounds to nearest: 4.5+ goes up, below goes down",
+      "<code>Math.floor()</code> always rounds <strong>down</strong>, <code>Math.ceil()</code> always rounds <strong>up</strong>",
+      "<code>Math.random()</code> gives a decimal between 0 and 1. For a random 1-10: <code>Math.floor(Math.random() * 10) + 1</code>"
+    ]
+  },
+  {
+    id: 13,
+    title: "Array Methods",
+    topic: "functions",
+    difficulty: "medium",
+    desc: "Use built-in array methods to add, remove, find, and transform items.",
+    code: `<span class="kw">let</span> fruits = [<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"mango"</span>];
+
+fruits.<span class="fn">push</span>(<span class="str">"grape"</span>);        <span class="cmt">// add to end</span>
+fruits.<span class="fn">pop</span>();               <span class="cmt">// remove from end</span>
+fruits.<span class="fn">unshift</span>(<span class="str">"kiwi"</span>);    <span class="cmt">// add to start</span>
+
+console.<span class="fn">log</span>(fruits.<span class="fn">indexOf</span>(<span class="str">"banana"</span>)); <span class="cmt">// find index</span>
+console.<span class="fn">log</span>(fruits.<span class="fn">includes</span>(<span class="str">"mango"</span>)); <span class="cmt">// check if exists</span>
+console.<span class="fn">log</span>(fruits.<span class="fn">join</span>(<span class="str">" | "</span>));       <span class="cmt">// join as string</span>
+console.<span class="fn">log</span>(fruits.<span class="fn">reverse</span>());        <span class="cmt">// reverse order</span>`,
+    guidance: [
+      "<code>.push()</code> adds to the <strong>end</strong>, <code>.pop()</code> removes from the <strong>end</strong>",
+      "<code>.unshift()</code> adds to the <strong>start</strong>, <code>.shift()</code> removes from the <strong>start</strong>",
+      "<code>.indexOf()</code> returns the position (index) of an item, or <code>-1</code> if not found",
+      "<code>.join(separator)</code> converts the array to a string with your chosen separator between items"
+    ]
+  },
+  {
+    id: 14,
+    title: "Ternary Operator",
+    topic: "operators",
+    difficulty: "medium",
+    desc: "Rewrite an if/else statement using the ternary operator. Then write your own from scratch.",
+    code: `<span class="kw">let</span> age = <span class="num">20</span>;
+
+<span class="cmt">// Traditional if/else:</span>
+<span class="kw">if</span> (age >= <span class="num">18</span>) {
+  console.<span class="fn">log</span>(<span class="str">"Adult"</span>);
+} <span class="kw">else</span> {
+  console.<span class="fn">log</span>(<span class="str">"Minor"</span>);
+}
+
+<span class="cmt">// Rewrite as ternary:</span>
+<span class="kw">let</span> status = age >= <span class="num">18</span> ? <span class="blank">___</span> : <span class="blank">___</span>;
+console.<span class="fn">log</span>(status);
+
+<span class="cmt">// Your turn: score >= 50 ? "Pass" : "Fail"</span>
+<span class="kw">let</span> score = <span class="num">72</span>;
+<span class="kw">let</span> result = <span class="blank">___</span>;`,
+    guidance: [
+      "Ternary syntax: <code>condition ? valueIfTrue : valueIfFalse</code>",
+      "It's a shortcut for <code>if/else</code> when you're assigning a value based on a condition",
+      "For the status: fill in <code>\"Adult\"</code> and <code>\"Minor\"</code> in the blanks",
+      "For the score: write <code>score >= 50 ? \"Pass\" : \"Fail\"</code> — keep it readable!"
+    ]
+  },
+  {
+    id: 15,
+    title: "Putting It All Together",
+    topic: "variables",
+    difficulty: "hard",
+    desc: "Build a mini profile card using all concepts: declarations, types, operators, scope, and built-in methods.",
+    code: `<span class="kw">const</span> firstName = <span class="str">"Sam"</span>;
+<span class="kw">const</span> lastName  = <span class="str">"Rivera"</span>;
+<span class="kw">let</span>   age       = <span class="num">28</span>;
+<span class="kw">let</span>   score     = <span class="num">87.456</span>;
+
+<span class="cmt">// 1. Full name (concatenation)</span>
+<span class="kw">let</span> fullName = firstName + <span class="blank">___</span> + lastName;
+
+<span class="cmt">// 2. Initials (string methods)</span>
+<span class="kw">let</span> initials = firstName[<span class="num">0</span>] + <span class="blank">___</span>;
+
+<span class="cmt">// 3. Is adult? (comparison + ternary)</span>
+<span class="kw">let</span> category = age >= <span class="num">18</span> ? <span class="blank">___</span> : <span class="blank">___</span>;
+
+<span class="cmt">// 4. Formatted score (number method)</span>
+<span class="kw">let</span> display = score.<span class="fn">toFixed</span>(<span class="blank">___</span>);
+
+console.<span class="fn">log</span>(<span class="str">"Name:"</span>, fullName.<span class="fn">toUpperCase</span>());
+console.<span class="fn">log</span>(<span class="str">"Initials:"</span>, initials);
+console.<span class="fn">log</span>(<span class="str">"Category:"</span>, category);
+console.<span class="fn">log</span>(<span class="str">"Score:"</span>, display);`,
+    guidance: [
+      "Step 1: Join <code>firstName</code>, a space <code>\" \"</code>, and <code>lastName</code> using <code>+</code>",
+      "Step 2: Get the first letter of lastName with <code>lastName[0]</code>, then concatenate both initials",
+      "Step 3: Use a ternary — <code>age >= 18 ? \"Adult\" : \"Minor\"</code>",
+      "Step 4: Use <code>.toFixed(1)</code> to show 1 decimal place → <code>87.5</code>",
+      "Bonus: wrap everything in a <code>function createProfile()</code> to practice scope!"
+    ]
+  },
+
+  // ── 3 more VARIABLES ──────────────────────────────────────────────────────
+  {
+    id: 16,
+    title: "Template Literals",
+    topic: "variables",
+    difficulty: "easy",
+    desc: "Rewrite string concatenation using template literals (backticks). Much cleaner!",
+    code: `<span class="kw">let</span> product = <span class="str">"Laptop"</span>;
+<span class="kw">let</span> price    = <span class="num">999</span>;
+<span class="kw">let</span> qty      = <span class="num">3</span>;
+
+<span class="cmt">// Old way (concatenation):</span>
+<span class="kw">let</span> msg1 = <span class="str">"Item: "</span> + product + <span class="str">", Price: $"</span> + price;
+
+<span class="cmt">// Rewrite with template literal:</span>
+<span class="kw">let</span> msg2 = <span class="blank">\`___\`</span>;
+
+<span class="cmt">// Multi-line with expression:</span>
+<span class="kw">let</span> receipt = <span class="blank">\`___\`</span>; <span class="cmt">// show qty * price total</span>
+console.<span class="fn">log</span>(msg2);
+console.<span class="fn">log</span>(receipt);`,
+    guidance: [
+      "Template literals use <strong>backticks</strong> ` ` instead of quotes",
+      "Embed variables/expressions with <code>${ }</code> syntax: <code>\\`Item: ${product}\\`</code>",
+      "For msg2: <code>\\`Item: ${product}, Price: $${price}\\`</code>",
+      "For receipt: you can do math inside <code>${ }</code> → <code>\\`Total: $${qty * price}\\`</code>",
+      "Template literals also support <strong>multi-line strings</strong> without <code>\\n</code>!"
+    ]
+  },
+  {
+    id: 17,
+    title: "Swap Two Variables",
+    topic: "variables",
+    difficulty: "medium",
+    desc: "Swap the values of two variables. Try the old way (temp variable) then the modern ES6 way.",
+    code: `<span class="kw">let</span> a = <span class="str">"first"</span>;
+<span class="kw">let</span> b = <span class="str">"second"</span>;
+
+<span class="cmt">// Method 1: using a temp variable</span>
+<span class="kw">let</span> temp = <span class="blank">___</span>;
+a    = <span class="blank">___</span>;
+b    = <span class="blank">___</span>;
+console.<span class="fn">log</span>(a, b); <span class="cmt">// "second" "first"</span>
+
+<span class="cmt">// Reset and try Method 2: destructuring swap</span>
+a = <span class="str">"first"</span>; b = <span class="str">"second"</span>;
+[<span class="blank">___</span>, <span class="blank">___</span>] = [b, a];
+console.<span class="fn">log</span>(a, b); <span class="cmt">// "second" "first"</span>`,
+    guidance: [
+      "Method 1: save <code>a</code> in <code>temp</code>, then set <code>a = b</code>, then <code>b = temp</code>",
+      "Without temp, <code>a = b</code> would overwrite <code>a</code>'s original value before you can copy it to <code>b</code>",
+      "Method 2: <strong>array destructuring</strong> — <code>[a, b] = [b, a]</code> swaps in one line!",
+      "The right side <code>[b, a]</code> is evaluated first, then the values are assigned to <code>[a, b]</code>"
+    ]
+  },
+  {
+    id: 18,
+    title: "Counter with Shorthand",
+    topic: "variables",
+    difficulty: "easy",
+    desc: "Use shorthand assignment operators to update a counter variable step by step.",
+    code: `<span class="kw">let</span> counter = <span class="num">0</span>;
+
+counter <span class="blank">___</span>= <span class="num">5</span>;   <span class="cmt">// counter is now 5</span>
+counter <span class="blank">___</span>= <span class="num">2</span>;   <span class="cmt">// counter is now 10</span>
+counter <span class="blank">___</span>= <span class="num">3</span>;   <span class="cmt">// counter is now 7</span>
+counter<span class="blank">___</span>;       <span class="cmt">// counter is now 8 (increment)</span>
+counter<span class="blank">___</span>;       <span class="cmt">// counter is now 7 (decrement)</span>
+
+console.<span class="fn">log</span>(<span class="str">"Final:"</span>, counter); <span class="cmt">// 7</span>`,
+    guidance: [
+      "<code>+=</code> adds to the variable: <code>counter += 5</code> is short for <code>counter = counter + 5</code>",
+      "<code>*=</code> multiplies: <code>counter *= 2</code> doubles it",
+      "<code>-=</code> subtracts: <code>counter -= 3</code>",
+      "<code>++</code> increments by 1: <code>counter++</code> (same as <code>counter += 1</code>)",
+      "<code>--</code> decrements by 1: <code>counter--</code>"
+    ]
+  },
+
+  // ── 3 more DECLARATION KEYWORDS ───────────────────────────────────────────
+  {
+    id: 19,
+    title: "const with Objects",
+    topic: "declarations",
+    difficulty: "medium",
+    desc: "Discover that const doesn't freeze objects — only the binding! Predict what works and what errors.",
+    code: `<span class="kw">const</span> user = { name: <span class="str">"Alice"</span>, age: <span class="num">25</span> };
+
+<span class="cmt">// Can you change a property?</span>
+user.age = <span class="num">26</span>;
+console.<span class="fn">log</span>(user.age); <span class="cmt">// ___ (works or error?)</span>
+
+<span class="cmt">// Can you add a new property?</span>
+user.city = <span class="str">"Paris"</span>;
+console.<span class="fn">log</span>(user.city); <span class="cmt">// ___ (works or error?)</span>
+
+<span class="cmt">// Can you reassign the whole object?</span>
+user = { name: <span class="str">"Bob"</span> }; <span class="cmt">// ___ (works or error?)</span>`,
+    guidance: [
+      "<code>const</code> prevents <strong>reassignment</strong> of the variable binding — not mutation of the value",
+      "Changing a property like <code>user.age = 26</code> is <strong>mutation</strong> — it works fine!",
+      "Adding a new property also works — the object itself is mutable",
+      "Only <code>user = { name: \"Bob\" }</code> throws a <code>TypeError</code> — that's a reassignment",
+      "To truly freeze an object use <code>Object.freeze(user)</code>"
+    ]
+  },
+  {
+    id: 20,
+    title: "let in a Loop",
+    topic: "declarations",
+    difficulty: "medium",
+    desc: "See how let creates a fresh binding per loop iteration — fix the classic var loop bug.",
+    code: `<span class="cmt">// 🐛 Bug with var — all log 3!</span>
+<span class="kw">for</span> (<span class="kw">var</span> i = <span class="num">0</span>; i < <span class="num">3</span>; i++) {
+  setTimeout(() => console.<span class="fn">log</span>(<span class="str">"var:"</span>, i), <span class="num">100</span>);
+}
+
+<span class="cmt">// ✅ Fix with let — logs 0, 1, 2</span>
+<span class="kw">for</span> (<span class="blank">___</span> j = <span class="num">0</span>; j < <span class="num">3</span>; j++) {
+  setTimeout(() => console.<span class="fn">log</span>(<span class="str">"let:"</span>, j), <span class="num">200</span>);
+}`,
+    guidance: [
+      "<code>var</code> shares one <code>i</code> across all iterations — by the time setTimeout fires, the loop is done and <code>i</code> is 3",
+      "<code>let</code> creates a <strong>new binding per iteration</strong> — each callback captures its own <code>j</code>",
+      "Simply replace <code>var</code> with <code>let</code> in the for loop to fix this classic bug",
+      "This is one of the most important real-world reasons to prefer <code>let</code> over <code>var</code>!"
+    ]
+  },
+  {
+    id: 21,
+    title: "Choose the Right Keyword",
+    topic: "declarations",
+    difficulty: "hard",
+    desc: "For each scenario, decide if you should use var, let, or const — and explain why.",
+    code: `<span class="cmt">// Fill in the best keyword for each:</span>
+
+<span class="blank">___</span> PI = <span class="num">3.14159</span>;        <span class="cmt">// math constant</span>
+
+<span class="blank">___</span> lives = <span class="num">3</span>;            <span class="cmt">// game lives (changes)</span>
+
+<span class="blank">___</span> MAX_SIZE = <span class="num">100</span>;       <span class="cmt">// config value, fixed</span>
+
+<span class="blank">___</span> result;               <span class="cmt">// declared now, set later</span>
+
+<span class="kw">function</span> <span class="fn">getScore</span>() {
+  <span class="blank">___</span> base = <span class="num">10</span>;           <span class="cmt">// only used here</span>
+  <span class="kw">return</span> base * <span class="num">2</span>;
+}`,
+    guidance: [
+      "<code>const</code> → <code>PI</code> and <code>MAX_SIZE</code>: values that never change should always be <code>const</code>",
+      "<code>let</code> → <code>lives</code>: changes over time (player loses/gains lives)",
+      "<code>let</code> → <code>result</code>: declared without a value now, assigned later — <code>const</code> requires initialization",
+      "<code>let</code> → <code>base</code>: local to the function, not reassigned but it's a computed temp value",
+      "<strong>Rule of thumb</strong>: default to <code>const</code>, switch to <code>let</code> only if you need to reassign, avoid <code>var</code>"
+    ]
+  },
+
+  // ── 3 more SCOPE ──────────────────────────────────────────────────────────
+  {
+    id: 22,
+    title: "Closure Basics",
+    topic: "scope",
+    difficulty: "hard",
+    desc: "A closure is a function that remembers variables from its outer scope. Complete the counter factory.",
+    code: `<span class="kw">function</span> <span class="fn">makeCounter</span>() {
+  <span class="kw">let</span> count = <span class="num">0</span>; <span class="cmt">// this is "closed over"</span>
+
+  <span class="kw">return</span> <span class="kw">function</span>() {
+    count <span class="blank">___</span>;           <span class="cmt">// increment count</span>
+    <span class="kw">return</span> <span class="blank">___</span>;          <span class="cmt">// return updated count</span>
+  };
+}
+
+<span class="kw">const</span> counter = <span class="fn">makeCounter</span>();
+console.<span class="fn">log</span>(<span class="fn">counter</span>()); <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(<span class="fn">counter</span>()); <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(<span class="fn">counter</span>()); <span class="cmt">// ___</span>`,
+    guidance: [
+      "A <strong>closure</strong> is created when an inner function references variables from its outer function's scope",
+      "Even after <code>makeCounter()</code> finishes, the inner function still has access to <code>count</code>",
+      "Inside the returned function: use <code>count++</code> or <code>count += 1</code>, then <code>return count</code>",
+      "Each call to <code>counter()</code> increments the same <code>count</code> variable → logs 1, 2, 3",
+      "Create a second counter: <code>const counter2 = makeCounter()</code> — it gets its own independent <code>count</code>!"
+    ]
+  },
+  {
+    id: 23,
+    title: "Shadowing Variables",
+    topic: "scope",
+    difficulty: "medium",
+    desc: "A local variable can shadow (hide) an outer variable with the same name. Trace the output.",
+    code: `<span class="kw">let</span> color = <span class="str">"red"</span>;
+
+<span class="kw">function</span> <span class="fn">paint</span>() {
+  <span class="kw">let</span> color = <span class="str">"blue"</span>; <span class="cmt">// shadows outer!</span>
+  console.<span class="fn">log</span>(color);  <span class="cmt">// prints: ___</span>
+}
+
+<span class="fn">paint</span>();
+console.<span class="fn">log</span>(color);    <span class="cmt">// prints: ___</span>
+
+<span class="kw">function</span> <span class="fn">noShadow</span>() {
+  console.<span class="fn">log</span>(color);  <span class="cmt">// prints: ___</span>
+}
+<span class="fn">noShadow</span>();`,
+    guidance: [
+      "Inside <code>paint()</code>, the local <code>color = \"blue\"</code> <strong>shadows</strong> the outer <code>color = \"red\"</code>",
+      "JS looks up variables from the <strong>innermost scope outward</strong> — finds local first",
+      "So inside <code>paint()</code>: logs <code>\"blue\"</code>. Outside: the outer <code>color</code> is untouched → <code>\"red\"</code>",
+      "<code>noShadow()</code> has no local <code>color</code> — it finds the global one → <code>\"red\"</code>",
+      "Shadowing isn't an error but can cause bugs — use distinct names when possible!"
+    ]
+  },
+  {
+    id: 24,
+    title: "Scope Chain Challenge",
+    topic: "scope",
+    difficulty: "hard",
+    desc: "Nested functions create a scope chain. Trace which value each console.log will find.",
+    code: `<span class="kw">let</span> x = <span class="str">"global"</span>;
+
+<span class="kw">function</span> <span class="fn">outer</span>() {
+  <span class="kw">let</span> x = <span class="str">"outer"</span>;
+
+  <span class="kw">function</span> <span class="fn">inner</span>() {
+    <span class="kw">let</span> x = <span class="str">"inner"</span>;
+    console.<span class="fn">log</span>(x); <span class="cmt">// ___</span>
+  }
+
+  <span class="kw">function</span> <span class="fn">middle</span>() {
+    console.<span class="fn">log</span>(x); <span class="cmt">// ___</span>
+  }
+
+  <span class="fn">inner</span>();
+  <span class="fn">middle</span>();
+  console.<span class="fn">log</span>(x);   <span class="cmt">// ___</span>
+}
+
+<span class="fn">outer</span>();
+console.<span class="fn">log</span>(x);     <span class="cmt">// ___</span>`,
+    guidance: [
+      "<code>inner()</code> has its own <code>x = \"inner\"</code> → logs <code>\"inner\"</code>",
+      "<code>middle()</code> has no local <code>x</code> — walks up the chain to <code>outer</code>'s scope → logs <code>\"outer\"</code>",
+      "Inside <code>outer()</code>, after calling both: <code>outer</code>'s own <code>x</code> → logs <code>\"outer\"</code>",
+      "After <code>outer()</code> returns: global <code>x</code> was never changed → logs <code>\"global\"</code>",
+      "The <strong>scope chain</strong>: inner → outer → global. JS walks UP, never down or sideways"
+    ]
+  },
+
+  // ── 3 more OPERATORS ──────────────────────────────────────────────────────
+  {
+    id: 25,
+    title: "Nullish Coalescing ??",
+    topic: "operators",
+    difficulty: "medium",
+    desc: "Learn the ?? operator — it's like || but only triggers for null and undefined, not falsy values.",
+    code: `<span class="kw">let</span> userScore = <span class="num">0</span>;
+<span class="kw">let</span> username   = <span class="str">""</span>;
+<span class="kw">let</span> nickname   = <span class="kw">null</span>;
+
+<span class="cmt">// With || (falsy check):</span>
+console.<span class="fn">log</span>(userScore  || <span class="num">100</span>); <span class="cmt">// ___ (bug!)</span>
+console.<span class="fn">log</span>(username   || <span class="str">"Anon"</span>);<span class="cmt">// ___ (bug!)</span>
+
+<span class="cmt">// With ?? (nullish check):</span>
+console.<span class="fn">log</span>(userScore  ?? <span class="num">100</span>); <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(username   ?? <span class="str">"Anon"</span>);<span class="cmt">// ___</span>
+console.<span class="fn">log</span>(nickname   ?? <span class="str">"Anon"</span>);<span class="cmt">// ___</span>`,
+    guidance: [
+      "<code>||</code> returns the right side for any <strong>falsy</strong> value: <code>0, \"\", false, null, undefined, NaN</code>",
+      "So <code>0 || 100</code> gives <code>100</code> — it thinks 0 means 'no value', which is often wrong!",
+      "<code>??</code> only returns the right side for <code>null</code> or <code>undefined</code>, nothing else",
+      "So <code>0 ?? 100</code> gives <code>0</code> and <code>\"\" ?? \"Anon\"</code> gives <code>\"\"</code> — the actual values are kept",
+      "Use <code>??</code> when <code>0</code>, <code>false</code>, or <code>\"\"</code> are valid real values in your data"
+    ]
+  },
+  {
+    id: 26,
+    title: "Optional Chaining ?.",
+    topic: "operators",
+    difficulty: "medium",
+    desc: "Access deeply nested properties safely without crashing when something is null or undefined.",
+    code: `<span class="kw">const</span> user1 = {
+  name: <span class="str">"Alice"</span>,
+  address: { city: <span class="str">"Paris"</span> }
+};
+<span class="kw">const</span> user2 = { name: <span class="str">"Bob"</span> }; <span class="cmt">// no address</span>
+
+<span class="cmt">// This crashes if address is missing:</span>
+<span class="cmt">// console.log(user2.address.city);</span>
+
+<span class="cmt">// Safe version with ?.:</span>
+console.<span class="fn">log</span>(user1<span class="blank">___</span>address<span class="blank">___</span>city); <span class="cmt">// "Paris"</span>
+console.<span class="fn">log</span>(user2<span class="blank">___</span>address<span class="blank">___</span>city); <span class="cmt">// ___</span>
+
+<span class="cmt">// Combine with ??:</span>
+<span class="kw">let</span> city = user2<span class="blank">___</span>address<span class="blank">___</span>city ?? <span class="str">"Unknown"</span>;
+console.<span class="fn">log</span>(city); <span class="cmt">// ___</span>`,
+    guidance: [
+      "Use <code>?.</code> between each property access: <code>user?.address?.city</code>",
+      "If any part is <code>null</code> or <code>undefined</code>, the whole expression short-circuits to <code>undefined</code> (no crash!)",
+      "Without <code>?.</code>, accessing <code>.city</code> on <code>undefined</code> throws a <code>TypeError</code>",
+      "Combine with <code>??</code> to provide a fallback: <code>user2?.address?.city ?? \"Unknown\"</code> → <code>\"Unknown\"</code>",
+      "Works for methods too: <code>user?.getProfile?.()</code> — only calls the method if it exists"
+    ]
+  },
+  {
+    id: 27,
+    title: "Increment & Assignment Deep Dive",
+    topic: "operators",
+    difficulty: "hard",
+    desc: "Understand the difference between prefix (++i) and postfix (i++) operators — they behave differently!",
+    code: `<span class="kw">let</span> a = <span class="num">5</span>;
+<span class="kw">let</span> b = <span class="num">5</span>;
+
+<span class="cmt">// Postfix: return THEN increment</span>
+console.<span class="fn">log</span>(a++); <span class="cmt">// prints: ___</span>
+console.<span class="fn">log</span>(a);   <span class="cmt">// prints: ___</span>
+
+<span class="cmt">// Prefix: increment THEN return</span>
+console.<span class="fn">log</span>(++b); <span class="cmt">// prints: ___</span>
+console.<span class="fn">log</span>(b);   <span class="cmt">// prints: ___</span>
+
+<span class="cmt">// Tricky: what is x?</span>
+<span class="kw">let</span> i = <span class="num">3</span>;
+<span class="kw">let</span> x = i++ + ++i;
+console.<span class="fn">log</span>(x); <span class="cmt">// ___</span>`,
+    guidance: [
+      "<strong>Postfix</strong> <code>a++</code>: returns the current value first (<code>5</code>), then increments → <code>a</code> becomes 6",
+      "<strong>Prefix</strong> <code>++b</code>: increments first (<code>b</code> becomes 6), then returns the new value (<code>6</code>)",
+      "For the tricky part: <code>i++</code> returns 3 (then i=4), then <code>++i</code> increments to 5 and returns 5",
+      "So <code>x = 3 + 5 = 8</code>. This kind of code is hard to read — avoid mixing them in expressions!",
+      "In practice, use <code>i++</code> or <code>++i</code> on their own line for clarity"
+    ]
+  },
+
+  // ── 3 more DATA TYPES ─────────────────────────────────────────────────────
+  {
+    id: 28,
+    title: "Truthy & Falsy Values",
+    topic: "types",
+    difficulty: "medium",
+    desc: "Every JavaScript value is either truthy or falsy in a boolean context. Classify each one.",
+    code: `<span class="cmt">// Predict: truthy (✓) or falsy (✗)?</span>
+<span class="kw">if</span> (<span class="num">0</span>)         console.<span class="fn">log</span>(<span class="str">"0 is truthy"</span>);      <span class="cmt">// ___</span>
+<span class="kw">if</span> (<span class="str">""</span>)        console.<span class="fn">log</span>(<span class="str">"'' is truthy"</span>);     <span class="cmt">// ___</span>
+<span class="kw">if</span> (<span class="str">"0"</span>)       console.<span class="fn">log</span>(<span class="str">"'0' is truthy"</span>);    <span class="cmt">// ___</span>
+<span class="kw">if</span> ([])        console.<span class="fn">log</span>(<span class="str">"[] is truthy"</span>);     <span class="cmt">// ___</span>
+<span class="kw">if</span> (<span class="kw">null</span>)      console.<span class="fn">log</span>(<span class="str">"null is truthy"</span>);   <span class="cmt">// ___</span>
+<span class="kw">if</span> (<span class="kw">NaN</span>)       console.<span class="fn">log</span>(<span class="str">"NaN is truthy"</span>);    <span class="cmt">// ___</span>
+<span class="kw">if</span> ({})        console.<span class="fn">log</span>(<span class="str">"{} is truthy"</span>);     <span class="cmt">// ___</span>`,
+    guidance: [
+      "The <strong>6 falsy values</strong> in JS: <code>false, 0, \"\", null, undefined, NaN</code>",
+      "Everything else is <strong>truthy</strong> — including <code>[]</code>, <code>{}</code>, <code>\"0\"</code>, <code>-1</code>",
+      "<code>[]</code> is truthy (empty array is still an object!), <code>\"0\"</code> is truthy (non-empty string)",
+      "<code>null</code> and <code>NaN</code> are falsy — their lines won't print",
+      "Test any value: <code>Boolean(value)</code> or use <code>!!value</code> to see its boolean equivalent"
+    ]
+  },
+  {
+    id: 29,
+    title: "NaN and Infinity",
+    topic: "types",
+    difficulty: "medium",
+    desc: "Explore two special number values: NaN (Not a Number) and Infinity. They behave surprisingly!",
+    code: `<span class="kw">let</span> result1 = <span class="num">10</span> / <span class="num">0</span>;
+<span class="kw">let</span> result2 = -<span class="num">10</span> / <span class="num">0</span>;
+<span class="kw">let</span> result3 = <span class="num">0</span> / <span class="num">0</span>;
+<span class="kw">let</span> result4 = <span class="fn">parseInt</span>(<span class="str">"hello"</span>);
+
+console.<span class="fn">log</span>(result1);           <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(result2);           <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(result3);           <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(result4);           <span class="cmt">// ___</span>
+
+<span class="cmt">// Checking for NaN (tricky!):</span>
+console.<span class="fn">log</span>(result4 === <span class="kw">NaN</span>);  <span class="cmt">// ___  ⚠️</span>
+console.<span class="fn">log</span>(<span class="fn">isNaN</span>(result4));    <span class="cmt">// ___</span>`,
+    guidance: [
+      "<code>10 / 0</code> = <code>Infinity</code>, <code>-10 / 0</code> = <code>-Infinity</code> (JS doesn't throw on division by zero!)",
+      "<code>0 / 0</code> = <code>NaN</code> — mathematically undefined",
+      "<code>parseInt(\"hello\")</code> = <code>NaN</code> — can't parse a non-numeric string",
+      "<strong>NaN is never equal to itself!</strong> <code>NaN === NaN</code> is <code>false</code> — the only value in JS where this is true",
+      "Always use <code>isNaN(value)</code> or <code>Number.isNaN(value)</code> to check for NaN"
+    ]
+  },
+  {
+    id: 30,
+    title: "Objects & Destructuring",
+    topic: "types",
+    difficulty: "hard",
+    desc: "Extract values from an object using destructuring — a cleaner alternative to dot notation.",
+    code: `<span class="kw">const</span> movie = {
+  title:    <span class="str">"Inception"</span>,
+  year:     <span class="num">2010</span>,
+  director: <span class="str">"Nolan"</span>,
+  rating:   <span class="num">8.8</span>
+};
+
+<span class="cmt">// Old way:</span>
+<span class="kw">let</span> t = movie.title;
+<span class="kw">let</span> y = movie.year;
+
+<span class="cmt">// Destructuring (fill in the blanks):</span>
+<span class="kw">const</span> { <span class="blank">___</span>, <span class="blank">___</span> } = movie; <span class="cmt">// get title & rating</span>
+
+<span class="cmt">// With rename:</span>
+<span class="kw">const</span> { director: <span class="blank">___</span> } = movie; <span class="cmt">// rename to "dir"</span>
+
+<span class="cmt">// With default value:</span>
+<span class="kw">const</span> { genre = <span class="blank">___</span> } = movie;  <span class="cmt">// "Unknown" if missing</span>
+console.<span class="fn">log</span>(title, rating, dir, genre);`,
+    guidance: [
+      "Destructuring syntax: <code>const { title, rating } = movie</code> — variable names must match property names",
+      "Rename while destructuring: <code>const { director: dir } = movie</code> — creates variable <code>dir</code>",
+      "Default values: <code>const { genre = \"Unknown\" } = movie</code> — used only if the property doesn't exist",
+      "You can destructure multiple properties in one line: <code>const { title, year, rating } = movie</code>",
+      "Works with arrays too: <code>const [first, second] = [10, 20]</code>"
+    ]
+  },
+
+  // ── 3 more BUILT-IN FUNCTIONS ─────────────────────────────────────────────
+  {
+    id: 31,
+    title: "toString(), toExponential() & length",
+    topic: "functions",
+    difficulty: "easy",
+    desc: "Convert numbers to strings, display them in exponential form, and measure string length.",
+    code: `<span class="kw">let</span> num = <span class="num">255</span>;
+<span class="kw">let</span> big = <span class="num">9876543</span>;
+
+<span class="cmt">// toString() — convert number to string</span>
+console.<span class="fn">log</span>(num.<span class="fn">toString</span>());    <span class="cmt">// "___"  (base 10)</span>
+console.<span class="fn">log</span>(num.<span class="fn">toString</span>(<span class="num">2</span>));   <span class="cmt">// "___"  (binary)</span>
+console.<span class="fn">log</span>(num.<span class="fn">toString</span>(<span class="num">16</span>));  <span class="cmt">// "___"  (hex)</span>
+
+<span class="cmt">// toExponential() — scientific notation</span>
+console.<span class="fn">log</span>(big.<span class="fn">toExponential</span>());   <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(big.<span class="fn">toExponential</span>(<span class="num">2</span>)); <span class="cmt">// ___ (2 decimals)</span>
+
+<span class="cmt">// length — count characters</span>
+<span class="kw">let</span> word = <span class="str">"JavaScript"</span>;
+console.<span class="fn">log</span>(word.<span class="fn">length</span>);         <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(num.<span class="fn">toString</span>().<span class="fn">length</span>);<span class="cmt">// ___</span>`,
+    guidance: [
+      "<code>.toString()</code> with no argument converts to base-10 string: <code>255 → \"255\"</code>",
+      "<code>.toString(2)</code> converts to <strong>binary</strong>: <code>255 → \"11111111\"</code>",
+      "<code>.toString(16)</code> converts to <strong>hexadecimal</strong>: <code>255 → \"ff\"</code> — used a lot in CSS colors!",
+      "<code>.toExponential()</code> formats in scientific notation: <code>9876543 → \"9.876543e+6\"</code>; with <code>(2)</code> → <code>\"9.88e+6\"</code>",
+      "<code>.length</code> is a <strong>property</strong> (no parentheses) — returns number of characters in a string"
+    ]
+  },
+  {
+    id: 32,
+    title: "at(), join(), isArray() & delete",
+    topic: "functions",
+    difficulty: "medium",
+    desc: "Access array items by index (including negative!), join them into a string, verify arrays, and delete elements.",
+    code: `<span class="kw">const</span> colors = [<span class="str">"red"</span>, <span class="str">"green"</span>, <span class="str">"blue"</span>, <span class="str">"yellow"</span>];
+
+<span class="cmt">// at() — access by index (supports negatives!)</span>
+console.<span class="fn">log</span>(colors.<span class="fn">at</span>(<span class="num">0</span>));   <span class="cmt">// ___  (first)</span>
+console.<span class="fn">log</span>(colors.<span class="fn">at</span>(-<span class="num">1</span>));  <span class="cmt">// ___  (last!)</span>
+console.<span class="fn">log</span>(colors.<span class="fn">at</span>(-<span class="num">2</span>));  <span class="cmt">// ___</span>
+
+<span class="cmt">// join() — merge array into a string</span>
+console.<span class="fn">log</span>(colors.<span class="fn">join</span>(<span class="str">", "</span>));  <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(colors.<span class="fn">join</span>(<span class="str">" - "</span>)); <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(colors.<span class="fn">join</span>(<span class="str">""</span>));    <span class="cmt">// ___</span>
+
+<span class="cmt">// Array.isArray() — check if it's an array</span>
+console.<span class="fn">log</span>(Array.<span class="fn">isArray</span>(colors));    <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(Array.<span class="fn">isArray</span>(<span class="str">"hello"</span>));  <span class="cmt">// ___</span>
+
+<span class="cmt">// delete — removes value, leaves hole!</span>
+<span class="kw">delete</span> colors[<span class="num">1</span>];
+console.<span class="fn">log</span>(colors);         <span class="cmt">// ___</span>
+console.<span class="fn">log</span>(colors.<span class="fn">length</span>);  <span class="cmt">// ___  ⚠️ still 4!</span>`,
+    guidance: [
+      "<code>.at(0)</code> is like <code>[0]</code> but <code>.at(-1)</code> gets the <strong>last</strong> item — no need to write <code>[arr.length - 1]</code>!",
+      "<code>.join(separator)</code> glues all elements into one string using your separator between them",
+      "<code>Array.isArray()</code> is the correct way to check for arrays — <code>typeof []</code> wrongly returns <code>\"object\"</code>",
+      "<code>delete colors[1]</code> sets that slot to <code>undefined</code> but <strong>does not remove</strong> the element — length stays the same",
+      "To truly remove an element, use <code>.splice()</code> instead of <code>delete</code>"
+    ]
+  },
+  {
+    id: 33,
+    title: "push, pop, shift, unshift, slice & splice",
+    topic: "functions",
+    difficulty: "medium",
+    desc: "Master the core array mutation methods — add, remove, cut, and insert elements.",
+    code: `<span class="kw">let</span> queue = [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Carol"</span>];
+
+<span class="cmt">// push / pop  (end of array)</span>
+queue.<span class="fn">push</span>(<span class="str">"Dave"</span>);
+console.<span class="fn">log</span>(queue);       <span class="cmt">// ___</span>
+<span class="kw">let</span> last = queue.<span class="fn">pop</span>();
+console.<span class="fn">log</span>(last, queue); <span class="cmt">// ___</span>
+
+<span class="cmt">// unshift / shift  (start of array)</span>
+queue.<span class="fn">unshift</span>(<span class="str">"Zara"</span>);
+console.<span class="fn">log</span>(queue);       <span class="cmt">// ___</span>
+<span class="kw">let</span> first = queue.<span class="fn">shift</span>();
+console.<span class="fn">log</span>(first, queue);<span class="cmt">// ___</span>
+
+<span class="cmt">// slice(start, end) — copy a portion (non-destructive)</span>
+<span class="kw">let</span> part = queue.<span class="fn">slice</span>(<span class="num">0</span>, <span class="num">2</span>);
+console.<span class="fn">log</span>(part, queue); <span class="cmt">// ___ (original unchanged?)</span>
+
+<span class="cmt">// splice(start, deleteCount, ...items) — cut & insert</span>
+queue.<span class="fn">splice</span>(<span class="num">1</span>, <span class="num">1</span>, <span class="str">"Eve"</span>, <span class="str">"Frank"</span>);
+console.<span class="fn">log</span>(queue);       <span class="cmt">// ___</span>`,
+    guidance: [
+      "<code>.push(x)</code> adds to the <strong>end</strong>; <code>.pop()</code> removes and <strong>returns</strong> the last item",
+      "<code>.unshift(x)</code> adds to the <strong>start</strong>; <code>.shift()</code> removes and <strong>returns</strong> the first item",
+      "<code>.slice(0, 2)</code> returns a <strong>new array</strong> with items from index 0 up to (not including) 2 — original untouched",
+      "<code>.splice(1, 1, \"Eve\", \"Frank\")</code>: starting at index 1, delete 1 item, then insert \"Eve\" and \"Frank\" in its place",
+      "<strong>Memory trick</strong>: <code>slice</code> = safe copy; <code>splice</code> = surgically modifies the original array"
+    ]
+  }
+];
+
+
+function getDifficultyDots(level) {
+  const map = { easy: 1, medium: 2, hard: 3 };
+  const filled = map[level];
+  return [1,2,3].map(i =>
+    `<div class="dot ${i <= filled ? 'lit ' + level : ''}"></div>`
+  ).join('');
+}
+
+function getTagClass(topic) {
+  return 'tag-' + topic;
+}
+
+function renderCard(p, index) {
+  return `
+  <div class="card" data-id="${p.id}" data-topic="${p.topic}" style="animation-delay:${index * 0.05}s">
+    <div class="card-header">
+      <span class="problem-num">#${String(p.id).padStart(2,'0')}</span>
+      <span class="problem-title">${p.title}</span>
+      <span class="topic-tag ${getTagClass(p.topic)}">${p.topic}</span>
+    </div>
+    <div class="card-body">
+      <p class="problem-desc">${p.desc}</p>
+      <div class="code-block">${p.code}</div>
+      <button class="guidance-toggle" onclick="toggleGuidance(this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        💡 Show Guidance
+      </button>
+      <div class="guidance-panel">
+        <ol>${p.guidance.map(g => `<li>${g}</li>`).join('')}</ol>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="difficulty">${getDifficultyDots(p.difficulty)}</div>
+      <button class="done-btn" onclick="toggleSolved(this, ${p.id})">
+        <span>✓</span> Mark as Solved
+      </button>
+    </div>
+  </div>`;
+}
+
+// Render all cards
+const grid = document.getElementById('grid');
+grid.innerHTML = problems.map((p, i) => renderCard(p, i)).join('');
+
+// Guidance toggle
+function toggleGuidance(btn) {
+  const panel = btn.nextElementSibling;
+  btn.classList.toggle('open');
+  panel.classList.toggle('open');
+  btn.innerHTML = btn.classList.contains('open')
+    ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg> 💡 Hide Guidance'
+    : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg> 💡 Show Guidance';
+}
+
+// Solved toggle
+let solvedSet = new Set();
+function toggleSolved(btn, id) {
+  const card = btn.closest('.card');
+  if (solvedSet.has(id)) {
+    solvedSet.delete(id);
+    card.classList.remove('solved');
+    btn.classList.remove('solved');
+    btn.innerHTML = '<span>✓</span> Mark as Solved';
+  } else {
+    solvedSet.add(id);
+    card.classList.add('solved');
+    btn.classList.add('solved');
+    btn.innerHTML = '<span>🎉</span> Solved!';
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = problems.length;
+  const done = solvedSet.size;
+  document.getElementById('progress-text').textContent = `${done} / ${total} solved`;
+  document.getElementById('progress-fill').style.width = `${(done / total) * 100}%`;
+}
+
+// Filter
+const filterBtns = document.querySelectorAll('.filter-btn');
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const topic = btn.dataset.topic;
+    document.querySelectorAll('.card').forEach(card => {
+      if (topic === 'all' || card.dataset.topic === topic) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
