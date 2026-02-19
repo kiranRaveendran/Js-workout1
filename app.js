@@ -9,7 +9,7 @@ const sc = t => `<span class="cmt">${t}</span>`;
 const sb = () => `<span class="blank">___</span>`;
 
 /* ─────────────────────────────────────────────
-   CHAPTER 1 — 33 PROBLEMS
+   CHAPTER 1 — 41 PROBLEMS
 ───────────────────────────────────────────── */
 const ch1 = [
     {
@@ -1810,7 +1810,17 @@ console.${
             "<code>.splice(1, 1, \"Eve\", \"Frank\")</code>: at index 1, delete 1, insert Eve & Frank",
             "<strong>Memory trick</strong>: slice = safe copy; splice = surgically modifies original"
         ]
-    }
+    },
+
+    /* Chapter 1 — Data Types: JS Objects (8 problems) */
+    { id: 34, title: "Object Properties (dot & bracket)", topic: "types", difficulty: "easy", desc: "Create an object with name and age. Access them using dot notation and bracket notation.", code: `${sv('const')} person = { name: ${ss('"Sam"')}, age: ${sn('25')} };\nconsole.${sf('log')}(person.${sb()}); ${sc('// "Sam"')}\nconsole.${sf('log')}(person[${sb()}]); ${sc('// 25')}`, guidance: ["Dot notation: <code>person.name</code> — key must be a valid identifier.", "Bracket notation: <code>person[\"age\"]</code> — use when key has spaces or is a variable.", "Fill first blank: <code>name</code>; second: <code>\"age\"</code> (string).", "Brackets allow dynamic keys: <code>person[keyVariable]</code>."] },
+    { id: 35, title: "Adding & Updating Properties", topic: "types", difficulty: "easy", desc: "Start with an empty object. Add properties one by one and then update one.", code: `${sv('const')} obj = ${sb()};\nobj.name = ${ss('"JS"')};\nobj.count = ${sn('1')};\nobj.count = ${sb()}; ${sc('// update to 2')}\nconsole.${sf('log')}(obj);`, guidance: ["Create empty object: <code>{}</code> or <code>new Object()</code>.", "Assign new key: <code>obj.key = value</code> adds or updates.", "Fill in: <code>2</code> to update <code>count</code> to 2.", "Objects are mutable — you can add and change properties anytime."] },
+    { id: 36, title: "Accessing Nested Elements", topic: "types", difficulty: "easy", desc: "Access a value nested inside an object (e.g. user.address.city).", code: `${sv('const')} user = { name: ${ss('"Alex"')}, address: { city: ${ss('"NYC"')}, zip: ${ss('"10001"')} } };\n${sv('const')} city = user.${sb()}.city;\nconsole.${sf('log')}(city); ${sc('// \"NYC\"')}`, guidance: ["Chain dot notation: <code>user.address.city</code>.", "Fill in: <code>address</code> to reach the nested object.", "Optional chaining: <code>user?.address?.city</code> avoids errors if a level is missing.", "Bracket style: <code>user[\"address\"][\"city\"]</code> works too."] },
+    { id: 37, title: "Object Method (function as property)", topic: "types", difficulty: "easy", desc: "Add a method greet to an object that returns a string using the object's name.", code: `${sv('const')} person = { name: ${ss('"Lee"')},\n  greet: ${sv('function')}() { ${sv('return')} ${ss('"Hi, "')} + ${sb()} + ${ss('"!"')}; }\n};\nconsole.${sf('log')}(person.${sf('greet')}());`, guidance: ["A method is a function stored as a property.", "Use <code>this.name</code> to refer to the object's name from inside the method.", "Fill in: <code>this.name</code> so the method returns \"Hi, Lee!\".", "Call with <code>person.greet()</code> — <code>this</code> will be <code>person</code>."] },
+    { id: 38, title: "The this Keyword in Object", topic: "types", difficulty: "medium", desc: "Use this inside an object method to access the object's properties and log them.", code: `${sv('const')} product = { name: ${ss('"Laptop"')}, price: ${sn('999')},\n  info() { console.${sf('log')}(${sv('this')}.name, ${sv('this')}.${sb()}); }\n};\nproduct.${sf('info')}(); ${sc('// Laptop 999')}`, guidance: ["<code>this</code> refers to the object that is calling the method.", "When you call <code>product.info()</code>, inside the method <code>this</code> is <code>product</code>.", "Fill in: <code>price</code> so it logs both name and price.", "If you extract the method and call it alone, <code>this</code> can be undefined or global."] },
+    { id: 39, title: "Object.keys() and Object.values()", topic: "types", difficulty: "easy", desc: "Get all keys and all values of an object as arrays using Object.keys and Object.values.", code: `${sv('const')} obj = { a: ${sn('1')}, b: ${sn('2')}, c: ${sn('3')} };\n${sv('const')} keys = Object.${sf('keys')}(${sb()});\n${sv('const')} vals = Object.${sf('values')}(obj);\nconsole.${sf('log')}(keys); ${sc('// [\"a\", \"b\", \"c\"]')}\nconsole.${sf('log')}(vals); ${sc('// [1, 2, 3]')}`, guidance: ["<code>Object.keys(obj)</code> returns an array of the object's own keys.", "<code>Object.values(obj)</code> returns an array of the object's values.", "Fill in: <code>obj</code> as the argument to <code>Object.keys()</code>.", "Use <code>Object.entries(obj)</code> for [key, value] pairs."] },
+    { id: 40, title: "Accessing with Variable Key", topic: "types", difficulty: "medium", desc: "Use a variable as the key to read a property from an object (bracket notation).", code: `${sv('const')} scores = { math: ${sn('90')}, eng: ${sn('85')}, sci: ${sn('88')} };\n${sv('const')} subject = ${ss('"math"')};\n${sv('const')} score = scores[${sb()}];\nconsole.${sf('log')}(score); ${sc('// 90')}`, guidance: ["Dot notation only works with literal keys: <code>obj.math</code>.", "When the key is in a variable, use brackets: <code>obj[subject]</code>.", "Fill in: <code>subject</code> (the variable name, no quotes).", "Dynamic access is common in loops: <code>for (const k of Object.keys(obj)) ... obj[k]</code>."] },
+    { id: 41, title: "Method Using this and Another Property", topic: "types", difficulty: "medium", desc: "Write an object with two properties and a method that uses both via this.", code: `${sv('const')} calc = { x: ${sn('10')}, y: ${sn('5')},\n  sum() { ${sv('return')} ${sv('this')}.x + ${sv('this')}.${sb()}; }\n};\nconsole.${sf('log')}(calc.${sf('sum')}()); ${sc('// 15')}`, guidance: ["Inside a method, <code>this</code> is the object.", "Use <code>this.x</code> and <code>this.y</code> to read the object's properties.", "Fill in: <code>y</code> so <code>sum()</code> returns 10 + 5 = 15.", "Methods can use any of the object's properties via <code>this</code>."] }
 ];
 
 /* ─────────────────────────────────────────────
@@ -3267,6 +3277,26 @@ updateChapter3Lock();
 /* ─────────────────────────────────────────────
    FILTER BUTTONS
 ───────────────────────────────────────────── */
+function renumberVisibleCh1Cards() {
+    const grid = document.getElementById('ch1-grid');
+    if (!grid) return;
+    const visible = grid.querySelectorAll('.card:not(.hidden)');
+    visible.forEach((card, index) => {
+        const numEl = card.querySelector('.problem-num');
+        if (numEl) numEl.textContent = '#' + String(index + 1).padStart(2, '0');
+    });
+}
+
+function renumberVisibleCh2Cards() {
+    const grid = document.getElementById('ch2-grid');
+    if (!grid) return;
+    const visible = grid.querySelectorAll('.card:not(.hidden)');
+    visible.forEach((card, index) => {
+        const numEl = card.querySelector('.problem-num');
+        if (numEl) numEl.textContent = '#' + String(index + 1).padStart(2, '0');
+    });
+}
+
 function renumberVisibleCh3Cards() {
     const grid = document.getElementById('ch3-grid');
     if (!grid) return;
@@ -3290,8 +3320,8 @@ function setupFilter(barId, gridId, onFilter) {
         });
     });
 }
-setupFilter('ch1-filter-bar', 'ch1-grid');
-setupFilter('ch2-filter-bar', 'ch2-grid');
+setupFilter('ch1-filter-bar', 'ch1-grid', renumberVisibleCh1Cards);
+setupFilter('ch2-filter-bar', 'ch2-grid', renumberVisibleCh2Cards);
 setupFilter('ch3-filter-bar', 'ch3-grid', renumberVisibleCh3Cards);
 
 /* ─────────────────────────────────────────────
