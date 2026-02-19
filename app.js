@@ -3039,6 +3039,56 @@ console.${
 ];
 
 /* ─────────────────────────────────────────────
+   CHAPTER 3 — 40 PROBLEMS (JS Functions)
+───────────────────────────────────────────── */
+const ch3 = [
+  { id: 1, title: "Function Declaration", topic: "definition", difficulty: "easy", desc: "Write a function declaration that takes two numbers and returns their sum.", code: `${sv('function')} ${sf('add')}(a, b) {\n  ${sv('return')} a + b;\n}\nconsole.${sf('log')}(${sf('add')}(${sn('2')}, ${sn('3')})); ${sc('// 5')}`, guidance: ["Use the <code>function</code> keyword followed by the function name.", "Parameters go in parentheses: <code>(a, b)</code>.", "Use <code>return</code> to send a value back.", "Function declarations are hoisted — you can call them before they appear in the code."] },
+  { id: 2, title: "Function Expression", topic: "definition", difficulty: "easy", desc: "Create the same add function using a function expression (assign to a variable).", code: `${sv('const')} add = ${sv('function')}(a, b) {\n  ${sv('return')} a + b;\n};\nconsole.${sf('log')}(add(${sn('10')}, ${sn('5')}));`, guidance: ["The function has no name after <code>function</code> — it's anonymous.", "The variable <code>add</code> holds the function reference.", "Function expressions are NOT hoisted; you must define before you call.", "Common pattern: <code>const fn = function() { ... };</code>"] },
+  { id: 3, title: "Arrow Function", topic: "definition", difficulty: "easy", desc: "Rewrite the add function as an arrow function.", code: `${sv('const')} add = (a, b) => ${sb()};\nconsole.${sf('log')}(add(${sn('1')}, ${sn('2')}));`, guidance: ["Arrow syntax: <code>(params) => expression</code> or <code>(params) => { return x; }</code>.", "For a single expression, you can omit <code>return</code> and the braces.", "Fill in: <code>a + b</code> (no semicolon inside).", "Arrow functions don't have their own <code>this</code> — they inherit from the enclosing scope."] },
+  { id: 4, title: "Anonymous Function as Callback", topic: "definition", difficulty: "easy", desc: "Pass an anonymous function to array.map to double each number.", code: `${sv('const')} nums = [${sn('1')}, ${sn('2')}, ${sn('3')}];\n${sv('const')} doubled = nums.${sf('map')}(${sv('function')}(n) { ${sv('return')} n * ${sn('2')} });\nconsole.${sf('log')}(doubled); ${sc('// [2, 4, 6]')}`, guidance: ["The function passed to <code>.map()</code> has no name — it's anonymous.", "It runs once per element; <code>n</code> is each item.", "Return the new value for that position.", "You could also use an arrow: <code>n => n * 2</code>."] },
+  { id: 5, title: "Method on Object", topic: "definition", difficulty: "easy", desc: "Add a method greet to an object that returns a greeting string.", code: `${sv('const')} user = {\n  name: ${ss('"Alex"')},\n  greet: ${sv('function')}() { ${sv('return')} ${sb()} + ${ss('"Hello, "')} + ${sb()} + ${ss('"!"')};\n};\nconsole.${sf('log')}(user.${sf('greet')}());`, guidance: ["A method is a function stored as a property of an object.", "Use <code>this.name</code> to access the object's name from inside the method.", "Fill in: <code>\"Hello, \"</code> and <code>this.name</code> (or the reverse order).", "Call it with <code>user.greet()</code> — <code>this</code> will be <code>user</code>."] },
+  { id: 6, title: "IIFE", topic: "execution", difficulty: "medium", desc: "Write an IIFE that runs immediately and logs a message.", code: `(${sv('function')}() {\n  console.${sf('log')}(${ss('"IIFE ran!"')});\n})${sb()}();`, guidance: ["IIFE = Immediately Invoked Function Expression.", "Wrap the function in parentheses: <code>(function() { ... })</code>.", "Add <code>()</code> at the end to invoke it right away.", "Useful to create a private scope and avoid polluting the global scope."] },
+  { id: 7, title: "Callback Function", topic: "execution", difficulty: "easy", desc: "Use setTimeout with a callback that runs after 1 second.", code: `console.${sf('log')}(${ss('"Start"')});\n${sf('setTimeout')}(${sv('function')}() {\n  console.${sf('log')}(${ss('"Done after 1s"')});\n}, ${sn('1000')});`, guidance: ["<code>setTimeout(callback, delayMs)</code> runs the callback later.", "The first argument is a function — that's your callback.", "The second argument is delay in milliseconds (1000 = 1 second).", "Callbacks are \"called back\" when an operation (e.g. timer) completes."] },
+  { id: 8, title: "Higher-Order Function", topic: "execution", difficulty: "medium", desc: "Write a HOF that takes a function and a number, and calls the function that many times.", code: `${sv('function')} ${sf('repeat')}(fn, times) {\n  ${sv('for')} (${sv('let')} i = ${sn('0')}; i < ${sb()}; i++) {\n    ${sb()}();\n  }\n}\n${sf('repeat')}(() => console.${sf('log')}(${ss('"Hi"')}), ${sn('3')});`, guidance: ["A HOF is a function that takes a function and/or returns a function.", "Fill in: <code>times</code> in the loop condition and <code>fn</code> inside the loop.", "Here <code>fn</code> is the callback; calling <code>fn()</code> runs it.", "<code>repeat</code> is the HOF; the arrow function is the callback."] },
+  { id: 9, title: "Recursive Function", topic: "execution", difficulty: "medium", desc: "Write a recursive function to compute factorial (n!).", code: `${sv('function')} ${sf('factorial')}(n) {\n  ${sv('if')} (n <= ${sn('1')}) ${sv('return')} ${sn('1')};\n\n  ${sv('return')} n * ${sf('factorial')}(${sb()});\n}\nconsole.${sf('log')}(${sf('factorial')}(${sn('5')})); ${sc('// 120')}`, guidance: ["Base case: when <code>n <= 1</code>, return 1 (0! and 1! are 1).", "Recursive case: <code>n * factorial(n - 1)</code>.", "The function calls itself with a smaller value until the base case.", "Ensure the base case is reached or you get infinite recursion (stack overflow)."] },
+  { id: 10, title: "Async/Await", topic: "execution", difficulty: "medium", desc: "Use async/await to wait for a Promise and log the result.", code: `${sv('async')} ${sv('function')} ${sf('fetchData')}() {\n  ${sv('const')} result = ${sv('await')} Promise.${sf('resolve')}(${ss('"Data loaded"')});\n  console.${sf('log')}(result);\n}\n${sf('fetchData')}();`, guidance: ["<code>async function</code> allows using <code>await</code> inside.", "<code>await</code> pauses until the Promise resolves and returns its value.", "Here <code>Promise.resolve(x)</code> creates an already-resolved promise.", "Async/await makes asynchronous code look synchronous and easier to read."] },
+  { id: 11, title: "Closure Basics", topic: "scope", difficulty: "medium", desc: "Create a function that returns another function that \"remembers\" a counter.", code: `${sv('function')} ${sf('makeCounter')}() {\n  ${sv('let')} count = ${sn('0')};\n\n  ${sv('return')} ${sv('function')}() {\n    count${sb()};\n    ${sv('return')} count;\n  };\n}\n${sv('const')} counter = ${sf('makeCounter')}();\nconsole.${sf('log')}(${sf('counter')}()); ${sc('// 1')}\nconsole.${sf('log')}(${sf('counter')}()); ${sc('// 2')}`, guidance: ["A closure is when an inner function keeps access to its outer scope.", "The inner function \"closes over\" the variable <code>count</code>.", "Use <code>count++</code> then <code>return count</code>.", "Each call to <code>makeCounter()</code> creates a new, independent counter."] },
+  { id: 12, title: "Hoisting", topic: "scope", difficulty: "easy", desc: "Call a function declaration before it appears in the code (demonstrate hoisting).", code: `${sf('sayHi')}(); ${sc('// Called before definition!')}\n${sv('function')} ${sf('sayHi')}() {\n  console.${sf('log')}(${ss('"Hi"')});\n}`, guidance: ["Function declarations are hoisted — the engine moves them to the top of their scope.", "So you can call <code>sayHi()</code> before the line where it's defined.", "Only declarations are hoisted; function expressions are not.", "This is why the call works: the declaration is effectively \"lifted\" up."] },
+  { id: 13, title: "Global vs Local Scope", topic: "scope", difficulty: "easy", desc: "Identify what logs: a global variable vs a local variable with the same name.", code: `${sv('let')} x = ${ss('"global"')};\n${sv('function')} ${sf('test')}() {\n  ${sv('let')} x = ${ss('"local"')};\n\n  console.${sf('log')}(x); ${sc('// ___')}\n}\n${sf('test')}();\nconsole.${sf('log')}(x); ${sc('// ___')}`, guidance: ["Inside <code>test()</code>, the local <code>x</code> shadows the global one.", "So the first <code>console.log(x)</code> prints <code>\"local\"</code>.", "The global <code>x</code> is unchanged; the second log prints <code>\"global\"</code>.", "Scope determines where a variable is visible; local wins over global when names match."] },
+  { id: 14, title: "Lexical Scope", topic: "scope", difficulty: "medium", desc: "Nested functions: inner function accesses outer function's variable (lexical environment).", code: `${sv('function')} ${sf('outer')}() {\n  ${sv('const')} msg = ${ss('"from outer"')};\n  ${sv('function')} ${sf('inner')}() {\n    console.${sf('log')}(msg);\n  }\n  ${sf('inner')}();\n}\n${sf('outer')}(); ${sc('// "from outer"')}`, guidance: ["Lexical scope = scope is determined by where the function is written in the code.", "Inner is defined inside outer, so it can \"see\" <code>msg</code>.", "When inner runs, it looks up <code>msg</code> in its lexical environment (outer's scope).", "The physical placement of the function in the source code defines its scope chain."] },
+  { id: 15, title: "this in Method", topic: "context", difficulty: "easy", desc: "Use this inside an object method to refer to the object.", code: `${sv('const')} obj = {\n  name: ${ss('"JS"')},\n  sayName: ${sv('function')}() {\n    console.${sf('log')}(${sv('this')}.name);\n  }\n};\nobj.${sf('sayName')}(); ${sc('// "JS"')}`, guidance: ["<code>this</code> refers to the object that is \"calling\" the method.", "When you call <code>obj.sayName()</code>, inside the method <code>this</code> is <code>obj</code>.", "So <code>this.name</code> is <code>obj.name</code> = <code>\"JS\"</code>.", "If you extract the method and call it alone, <code>this</code> can change (e.g. undefined in strict mode)."] },
+  { id: 16, title: ".call()", topic: "context", difficulty: "medium", desc: "Use .call() to invoke a function with a specific this and arguments.", code: `${sv('function')} ${sf('greet')}(greeting, punct) {\n  console.${sf('log')}(greeting + ${sv('this')}.name + punct);\n}\n${sv('const')} user = { name: ${ss('" Sam"')} };\n${sf('greet')}.${sf('call')}(${sb()}, ${ss('"Hello,"')}, ${ss('"!"')});`, guidance: ["<code>fn.call(thisArg, arg1, arg2, ...)</code> — first arg is <code>this</code>, rest are function args.", "Here <code>thisArg</code> is <code>user</code>, so inside greet, <code>this</code> is user.", "Fill in: <code>user</code> as the first argument to <code>.call()</code>.", "Output will be: Hello, Sam!"] },
+  { id: 17, title: ".apply()", topic: "context", difficulty: "medium", desc: "Use .apply() to invoke a function with this and arguments as an array.", code: `${sv('function')} ${sf('sum')}(a, b, c) {\n  console.${sf('log')}(a + b + c);\n}\n${sf('sum')}.${sf('apply')}(${sv('null')}, [${sn('1')}, ${sn('2')}, ${sn('3')}]); ${sc('// 6')}`, guidance: ["<code>fn.apply(thisArg, [arg1, arg2, ...])</code> — second arg is an array of arguments.", "Here we don't need a special <code>this</code>, so <code>null</code> is fine.", "The array <code>[1, 2, 3]</code> is \"spread\" as the three parameters a, b, c.", "Modern alternative: <code>sum(...[1,2,3])</code> with spread; <code>.call()</code> and <code>.apply()</code> are still used for setting <code>this</code>."] },
+  { id: 18, title: ".bind()", topic: "context", difficulty: "medium", desc: "Use .bind() to create a new function with this permanently set.", code: `${sv('const')} person = { name: ${ss('"Lee"')} };\n${sv('function')} ${sf('sayName')}() { console.${sf('log')}(this.name); }\n${sv('const')} boundFn = ${sf('sayName')}.${sf('bind')}(${sb()});\nboundFn(); ${sc('// "Lee"')}`, guidance: ["<code>fn.bind(thisArg)</code> returns a new function with <code>this</code> fixed to <code>thisArg</code>.", "Fill in: <code>person</code> so that when <code>boundFn</code> is called, <code>this</code> is person.", "Unlike <code>.call()</code> or <code>.apply()</code>, <code>.bind()</code> doesn't call the function — it returns a new function.", "Useful for callbacks where you need to preserve <code>this</code> (e.g. in event handlers)."] },
+  { id: 19, title: "Named Function Expression", topic: "definition", difficulty: "medium", desc: "Write a named function expression (function has a name for recursion/debugging).", code: `${sv('const')} ${sf('factorial')} = ${sv('function')} ${sf('fact')}(n) {\n  ${sv('if')} (n <= 1) ${sv('return')} 1;\n  ${sv('return')} n * ${sf('fact')}(n - 1);\n};\nconsole.${sf('log')}(${sf('factorial')}(${sn('4')})); ${sc('// 24')}`, guidance: ["The function has an internal name <code>fact</code> after <code>function</code>.", "The variable is <code>factorial</code>; the name <code>fact</code> is only visible inside the function.", "Useful for recursion: <code>fact(n-1)</code> calls itself by that internal name.", "Also helps in stack traces — the name appears in the debugger."] },
+  { id: 20, title: "this with .bind() in Callback", topic: "context", difficulty: "hard", desc: "Fix a lost-this problem: use .bind() so a method passed as callback keeps its this.", code: `${sv('const')} btn = { label: ${ss('"Click"')}, log() { console.${sf('log')}(this.label); } };\n${sf('setTimeout')}(btn.log.${sf('bind')}(${sb()}), 1000);`, guidance: ["When you pass <code>btn.log</code> to setTimeout, it's called later with <code>this</code> undefined (or global).", "Use <code>btn.log.bind(btn)</code> to create a new function with <code>this</code> fixed to <code>btn</code>.", "Fill in: <code>btn</code> so that when the callback runs, <code>this</code> is the button object.", "After 1 second, it will correctly log <code>\"Click\"</code>."] },
+  /* Definition & Syntax — 5 more */
+  { id: 21, title: "Arrow with Single Parameter", topic: "definition", difficulty: "easy", desc: "Use an arrow function with one parameter to square a number. (Single param can omit parentheses.)", code: `${sv('const')} square = ${sb()} => x * x;\nconsole.${sf('log')}(square(${sn('5')})); ${sc('// 25')}`, guidance: ["With one parameter you can write <code>x => ...</code> instead of <code>(x) => ...</code>.", "Fill in the parameter name: <code>x</code> (or any name).", "No <code>return</code> needed for a single expression.", "Multiple params or no params still need parentheses: <code>() => ...</code> or <code>(a, b) => ...</code>."] },
+  { id: 22, title: "Arrow in .filter()", topic: "definition", difficulty: "easy", desc: "Use an arrow function with .filter() to keep only numbers greater than 10.", code: `${sv('const')} nums = [${sn('5')}, ${sn('12')}, ${sn('8')}, ${sn('20')}];\n${sv('const')} big = nums.${sf('filter')}(${sb()} => n > 10);\nconsole.${sf('log')}(big); ${sc('// [12, 20]')}`, guidance: ["<code>.filter(callback)</code> keeps elements where the callback returns truthy.", "The callback receives each element — use one param e.g. <code>n</code>.", "Return a boolean: <code>n > 10</code>.", "Arrow form: <code>n => n > 10</code> is a common pattern."] },
+  { id: 23, title: "Method Shorthand (ES6)", topic: "definition", difficulty: "easy", desc: "Define a method using ES6 shorthand: name and parentheses only, no 'function' keyword.", code: `${sv('const')} calc = {\n  a: ${sn('3')},\n  b: ${sn('4')},\n  ${sb()}() { ${sv('return')} this.a + this.b; }\n};\nconsole.${sf('log')}(calc.${sf('add')}()); ${sc('// 7')}`, guidance: ["ES6 shorthand: <code>add() { ... }</code> instead of <code>add: function() { ... }</code>.", "The method name is <code>add</code>; fill in that identifier before the parentheses.", "Still use <code>this</code> to refer to the object.", "Shorthand is just syntactic sugar — behavior is the same as a regular method."] },
+  { id: 24, title: "Function Expression in .reduce()", topic: "definition", difficulty: "medium", desc: "Use .reduce() with a function expression to sum an array of numbers.", code: `${sv('const')} arr = [${sn('1')}, ${sn('2')}, ${sn('3')}, ${sn('4')}];\n${sv('const')} total = arr.${sf('reduce')}(${sv('function')}(acc, n) { ${sv('return')} ${sb()}; }, ${sn('0')});\nconsole.${sf('log')}(total); ${sc('// 10')}`, guidance: ["<code>.reduce(callback, initialValue)</code> — callback gets <code>(accumulator, current)</code>.", "Return the new accumulator each time: <code>acc + n</code>.", "First call: <code>acc</code> is 0 (initial), <code>n</code> is 1; then acc becomes 1, etc.", "The function has no name — it's an anonymous function expression."] },
+  { id: 25, title: "Function Returning a Function", topic: "definition", difficulty: "medium", desc: "Write a function that returns another function. The inner function should double its argument.", code: `${sv('function')} ${sf('makeMultiplier')}(factor) {\n  ${sv('return')} ${sv('function')}(x) { ${sv('return')} ${sb()}; };\n}\n${sv('const')} double = ${sf('makeMultiplier')}(${sn('2')});\nconsole.${sf('log')}(double(${sn('5')})); ${sc('// 10')}`, guidance: ["A function can return any value, including another function.", "Inner function has access to <code>factor</code> from the outer scope (closure).", "Fill in: <code>x * factor</code> (or <code>factor * x</code>).", "This pattern is the basis of higher-order functions and partial application."] },
+  /* Execution & Control Flow — 5 more */
+  { id: 26, title: "IIFE with Parameter", topic: "execution", difficulty: "medium", desc: "Write an IIFE that accepts a name and logs a greeting. Invoke it immediately with your name.", code: `(${sv('function')}(name) {\n  console.${sf('log')}(${ss('"Hello, "')} + name + ${ss('"!"')});\n})(${sb()});`, guidance: ["IIFEs can take arguments: <code>(function(name) { ... })(value)</code>.", "The value you pass is the argument to the function — e.g. a string like <code>\"World\"</code>.", "The parentheses around the function turn it into an expression; the trailing <code>(...)</code> invokes it.", "Useful for one-off setup with parameters without polluting the global scope."] },
+  { id: 27, title: "HOF That Returns a Function", topic: "execution", difficulty: "medium", desc: "Write a HOF that takes a multiplier and returns a function. The returned function multiplies its argument by that multiplier.", code: `${sv('function')} ${sf('multiplyBy')}(n) {\n  ${sv('return')} ${sv('function')}(x) { ${sv('return')} ${sb()} * ${sb()}; };\n}\n${sv('const')} triple = ${sf('multiplyBy')}(${sn('3')});\nconsole.${sf('log')}(triple(${sn('4')})); ${sc('// 12')}`, guidance: ["A HOF can return a function instead of (or in addition to) taking one.", "The inner function closes over <code>n</code>.", "Fill in: first blank <code>x</code>, second blank <code>n</code> (or the reverse: <code>n * x</code>).", "This is partial application: <code>multiplyBy(3)</code> \"fixes\" the first factor."] },
+  { id: 28, title: "Recursive Array Sum", topic: "execution", difficulty: "medium", desc: "Write a recursive function that returns the sum of all numbers in an array (without using loops).", code: `${sv('function')} ${sf('sumArr')}(arr) {\n  ${sv('if')} (arr.${sf('length')} === ${sn('0')}) ${sv('return')} ${sn('0')};\n  ${sv('return')} arr[${sn('0')}] + ${sf('sumArr')}(${sb()});\n}\nconsole.${sf('log')}(${sf('sumArr')}([${sn('1')}, ${sn('2')}, ${sn('3')}])); ${sc('// 6')}`, guidance: ["Base case: empty array → return 0.", "Recursive case: first element + sum of the rest.", "Use <code>arr.slice(1)</code> to get the array without the first element.", "So: <code>arr[0] + sumArr(arr.slice(1))</code>."] },
+  { id: 29, title: "Async/Await with Error Handling", topic: "execution", difficulty: "medium", desc: "Use async/await inside try/catch to handle a rejected Promise and log the error.", code: `${sv('async')} ${sv('function')} ${sf('risky')}() {\n  ${sv('try')} {\n    ${sv('await')} Promise.${sf('reject')}(${ss('"Oops"')});\n  } ${sv('catch')} (err) {\n    console.${sf('log')}(${sb()}); ${sc('// log the error')}\n  }\n}\n${sf('risky')}();`, guidance: ["<code>await</code> on a rejected Promise throws in the async function.", "Wrap in <code>try/catch</code> to handle the error; <code>catch (err)</code> receives it.", "Fill in: <code>err</code> (or use <code>err.message</code> if it's an Error).", "Without try/catch, the rejection becomes an unhandled promise rejection."] },
+  { id: 30, title: "Generator with yield", topic: "execution", difficulty: "hard", desc: "Write a generator function (function*) that yields 1, then 2, then 3. Use .next() to get the first value.", code: `${sv('function')} *${sf('gen')}() {\n  ${sv('yield')} ${sn('1')};\n  ${sv('yield')} ${sn('2')};\n  ${sv('yield')} ${sn('3')};\n}\n${sv('const')} g = ${sf('gen')}();\nconsole.${sf('log')}(g.${sf('next')}().value); ${sc('// 1')}`, guidance: ["Declare with <code>function* name()</code> — the asterisk makes it a generator.", "<code>yield</code> pauses the function and sends a value out; <code>.next()</code> resumes it.", "Calling <code>gen()</code> returns an iterator; <code>.next()</code> returns <code>{ value, done }</code>.", "Generators are useful for lazy sequences and custom iteration."] },
+  /* Scope & Memory — 5 more */
+  { id: 31, title: "Closure: Private Variable", topic: "scope", difficulty: "medium", desc: "Create a closure that holds a secret string. Return a function that returns that secret when called.", code: `${sv('function')} ${sf('createSecret')}(secret) {\n  ${sv('return')} ${sv('function')}() {\n    ${sv('return')} ${sb()};\n  };\n}\n${sv('const')} getSecret = ${sf('createSecret')}(${ss('"password123"')});\nconsole.${sf('log')}(getSecret()); ${sc('// "password123"')}`, guidance: ["The inner function closes over the parameter <code>secret</code>.", "Fill in: <code>secret</code> so the getter returns the value from the outer scope.", "Nothing else can access <code>secret</code> directly — it's effectively private.", "This pattern is used for encapsulation and module-like behavior."] },
+  { id: 32, title: "Block Scope with let", topic: "scope", difficulty: "easy", desc: "Use let inside a block {} and confirm the variable is not visible outside the block.", code: `{\n  ${sv('let')} blockOnly = ${ss('"inside"')};\n  console.${sf('log')}(blockOnly); ${sc('// "inside"')}\n}\nconsole.${sf('log')}(typeof ${sb()}); ${sc('// "undefined" — blockOnly not in scope')}`, guidance: ["<code>let</code> and <code>const</code> are block-scoped: they exist only inside the <code>{ }</code>.", "Outside the block, <code>blockOnly</code> doesn't exist.", "Fill in: <code>blockOnly</code> — <code>typeof</code> of an undeclared identifier is <code>\"undefined\"</code> (or it would throw in strict mode).", "With <code>var</code>, the variable would be function-scoped and could leak out."] },
+  { id: 33, title: "Closure in Loop (Fix)", topic: "scope", difficulty: "hard", desc: "Fix the classic loop bug: create 3 functions that log 0, 1, 2 (not 3, 3, 3). Use let in the loop.", code: `${sv('const')} fns = [];\n${sv('for')} (${sv('let')} i = ${sn('0')}; i < ${sn('3')}; i++) {\n  fns.${sf('push')}(() => console.${sf('log')}(${sb()}));\n}\nfns[${sn('0')}](); fns[${sn('1')}](); fns[${sn('2')}](); ${sc('// 0, 1, 2')}`, guidance: ["With <code>let</code>, each iteration has its own <code>i</code> (block scope).", "The arrow function closes over that per-iteration <code>i</code>.", "Fill in: <code>i</code> — each callback \"sees\" the correct value.", "With <code>var</code> you'd get 3, 3, 3 because there's only one shared <code>i</code>."] },
+  { id: 34, title: "Lexical Scope: Three Levels", topic: "scope", difficulty: "medium", desc: "Nest three functions. The innermost should log a variable from the outermost scope.", code: `${sv('function')} ${sf('level1')}() {\n  ${sv('const')} x = ${ss('"outer"')};\n  ${sv('function')} ${sf('level2')}() {\n    ${sv('function')} ${sf('level3')}() {\n      console.${sf('log')}(${sb()}); ${sc('// "outer"')}\n    }\n    ${sf('level3')}();\n  }\n  ${sf('level2')}();\n}\n${sf('level1')}();`, guidance: ["Lexical scope forms a chain: level3 → level2 → level1 → global.", "A function can access variables from any enclosing scope where it was defined.", "Fill in: <code>x</code> — level3 looks up <code>x</code> and finds it in level1.", "The scope is determined by where the function is written, not where it's called."] },
+  { id: 35, title: "Hoisting: Function vs Variable", topic: "scope", difficulty: "medium", desc: "Predict: a function declaration is hoisted; a variable with the same name assigned later — what gets called?", code: `${sf('what')}(); ${sc('// ___')}\n${sv('var')} what = ${sv('function')}() { console.${sf('log')}(${ss('"var"')}); };\n${sv('function')} ${sf('what')}() { console.${sf('log')}(${ss('"function"')}); }`, guidance: ["Function declarations are hoisted (and take precedence over variable with same name).", "So <code>what()</code> runs the function declaration: logs <code>\"function\"</code>.", "The <code>var what</code> is hoisted too but the assignment happens at runtime; the function body wins for the call.", "Avoid naming a variable the same as a function to prevent confusion."] },
+  /* Context & Binding — 5 more */
+  { id: 36, title: ".apply() to Find Max", topic: "context", difficulty: "medium", desc: "Use Math.max with .apply() to find the maximum value in an array (thisArg can be null).", code: `${sv('const')} nums = [${sn('4')}, ${sn('9')}, ${sn('2')}, ${sn('15')}];\n${sv('const')} max = Math.${sf('max')}.${sf('apply')}(${sb()}, nums);\nconsole.${sf('log')}(max); ${sc('// 15')}`, guidance: ["<code>Math.max(a, b, c, ...)</code> expects individual arguments, not an array.", "<code>.apply(thisArg, argsArray)</code> spreads the array as arguments.", "We don't need a specific <code>this</code> for Math.max, so use <code>null</code>.", "Modern alternative: <code>Math.max(...nums)</code> with spread."] },
+  { id: 37, title: ".bind() with Arguments", topic: "context", difficulty: "medium", desc: "Use .bind() to create a function that has both this and the first argument fixed (partial application).", code: `${sv('function')} ${sf('greet')}(greeting, name) {\n  return greeting + ${sv('this')}.title + ${ss('" "')} + name;\n}\n${sv('const')} obj = { title: ${ss('"Dr."')} };\n${sv('const')} sayHi = ${sf('greet')}.${sf('bind')}(obj, ${ss('"Hello, "')});\nconsole.${sf('log')}(sayHi(${ss('"Smith"')})); ${sc('// "Hello, Dr. Smith"')}`, guidance: ["<code>fn.bind(thisArg, arg1, arg2)</code> fixes <code>this</code> and optionally some arguments.", "Here <code>greet.bind(obj, \"Hello, \")</code> fixes <code>this</code> and the first parameter.", "Calling <code>sayHi(\"Smith\")</code> passes only the second argument (name).", "Useful for creating specialized functions from a general one."] },
+  { id: 38, title: "this in Nested Function", topic: "context", difficulty: "hard", desc: "Inside a method, a regular inner function loses 'this'. Store this in a variable (e.g. self) and use it inside the inner function.", code: `${sv('const')} obj = {\n  name: ${ss('"Outer"')},\n  run() {\n    ${sv('const')} self = ${sb()};\n    ${sv('function')} ${sf('inner')}() { console.${sf('log')}(self.name); }\n    ${sf('inner')}();\n  }\n};\nobj.${sf('run')}(); ${sc('// "Outer"')}`, guidance: ["Inside <code>run()</code>, <code>this</code> is <code>obj</code>.", "Inner functions (declared with <code>function</code>) don't inherit <code>this</code>.", "Save <code>this</code> in a variable: <code>const self = this;</code> (or <code>that</code>).", "Use <code>self</code> inside the inner function to refer to the object."] },
+  { id: 39, title: ".call() vs .apply()", topic: "context", difficulty: "easy", desc: "Invoke a function that takes (a, b, c) using .call() with three separate arguments, then using .apply() with one array.", code: `${sv('function')} ${sf('add3')}(a, b, c) { return a + b + c; }\n${sv('const')} args = [${sn('1')}, ${sn('2')}, ${sn('3')}];\nconsole.${sf('log')}(${sf('add3')}.${sf('call')}(${sv('null')}, ${sn('1')}, ${sn('2')}, ${sn('3')})); ${sc('// 6')}\nconsole.${sf('log')}(${sf('add3')}.${sf('apply')}(${sv('null')}, ${sb()})); ${sc('// 6')}`, guidance: ["<code>.call(null, 1, 2, 3)</code> — arguments listed individually.", "<code>.apply(null, array)</code> — arguments passed as a single array.", "Fill in: <code>args</code> so that <code>add3.apply(null, args)</code> spreads the array as a, b, c.", "Same result; use .apply when you have an array of arguments."] },
+  { id: 40, title: "Arrow Function and this", topic: "context", difficulty: "medium", desc: "Use an arrow function inside a method so that 'this' is inherited from the method (e.g. in a setTimeout callback).", code: `${sv('const')} timer = {\n  name: ${ss('"Timer"')},\n  start() {\n    ${sf('setTimeout')}(() => console.${sf('log')}(this.${sb()}), 100);\n  }\n};\ntimer.${sf('start')}(); ${sc('// "Timer"')}`, guidance: ["Arrow functions don't have their own <code>this</code> — they use the <code>this</code> from the enclosing scope.", "Here the arrow function is inside <code>start()</code>, so its <code>this</code> is the same as <code>start</code>'s (the timer object).", "Fill in: <code>name</code> to log <code>this.name</code> (i.e. \"Timer\").", "A regular <code>function() { ... }</code> would have lost <code>this</code> when called by setTimeout."] }
+];
+
+/* ─────────────────────────────────────────────
    RENDER ENGINE + LOCALSTORAGE PERSISTENCE
 ───────────────────────────────────────────── */
 const STORAGE_KEY = 'js-workout-solved';
@@ -3046,14 +3096,15 @@ const STORAGE_KEY = 'js-workout-solved';
 function loadSolvedFromStorage() {
     try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return { ch1: [], ch2: [] };
+        if (!raw) return { ch1: [], ch2: [], ch3: [] };
         const data = JSON.parse(raw);
         return {
             ch1: Array.isArray(data.ch1) ? data.ch1 : [],
-            ch2: Array.isArray(data.ch2) ? data.ch2 : []
+            ch2: Array.isArray(data.ch2) ? data.ch2 : [],
+            ch3: Array.isArray(data.ch3) ? data.ch3 : []
         };
     } catch (e) {
-        return { ch1: [], ch2: [] };
+        return { ch1: [], ch2: [], ch3: [] };
     }
 }
 
@@ -3061,7 +3112,8 @@ function saveSolvedToStorage() {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
             ch1: [...solvedIds.ch1],
-            ch2: [...solvedIds.ch2]
+            ch2: [...solvedIds.ch2],
+            ch3: [...solvedIds.ch3]
         }));
     } catch (e) {}
 }
@@ -3069,7 +3121,8 @@ function saveSolvedToStorage() {
 const saved = loadSolvedFromStorage();
 const solvedIds = {
     ch1: new Set(saved.ch1),
-    ch2: new Set(saved.ch2)
+    ch2: new Set(saved.ch2),
+    ch3: new Set(saved.ch3)
 };
 
 function dots(level) {
@@ -3139,11 +3192,12 @@ function renderCard(p, chapter, delay) {
 // Render chapters
 document.getElementById('ch1-grid').innerHTML = ch1.map((p, i) => renderCard(p, 1, i * 0.04)).join('');
 document.getElementById('ch2-grid').innerHTML = ch2.map((p, i) => renderCard(p, 2, i * 0.04)).join('');
+document.getElementById('ch3-grid').innerHTML = ch3.map((p, i) => renderCard(p, 3, i * 0.04)).join('');
 
 // Restore solved state from localStorage into the DOM
 function restoreSolvedUI() {
-    ['ch1', 'ch2'].forEach(function (chKey) {
-        var gridId = chKey === 'ch1' ? 'ch1-grid' : 'ch2-grid';
+    ['ch1', 'ch2', 'ch3'].forEach(function (chKey) {
+        var gridId = chKey + '-grid';
         solvedIds[chKey].forEach(function (id) {
             var card = document.querySelector('#' + gridId + ' .card[data-id="' + id + '"]');
             if (card) {
@@ -3179,10 +3233,27 @@ function updateChapter2Lock() {
     }
 }
 
+function updateChapter3Lock() {
+    const ch3Tab = document.querySelector('.ch-tab[data-chapter="3"]');
+    if (!ch3Tab) return;
+    const ch2Complete = solvedIds.ch2.size >= ch2.length;
+    if (ch2Complete) {
+        ch3Tab.classList.remove('ch-tab-locked');
+        ch3Tab.classList.add('ch-tab-unlocked');
+        ch3Tab.setAttribute('aria-disabled', 'false');
+        ch3Tab.title = 'JS Functions';
+    } else {
+        ch3Tab.classList.add('ch-tab-locked');
+        ch3Tab.classList.remove('ch-tab-unlocked');
+        ch3Tab.setAttribute('aria-disabled', 'true');
+        ch3Tab.title = 'Complete all ' + ch2.length + ' Chapter 2 problems to unlock';
+    }
+}
+
 document.querySelectorAll('.ch-tab').forEach(btn => {
     btn.addEventListener('click', () => {
         const ch = btn.dataset.chapter;
-        if (ch === '2' && btn.classList.contains('ch-tab-locked')) return;
+        if ((ch === '2' && btn.classList.contains('ch-tab-locked')) || (ch === '3' && btn.classList.contains('ch-tab-locked'))) return;
         document.querySelectorAll('.ch-tab').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.ch-section').forEach(s => s.classList.remove('active'));
         btn.classList.add('active');
@@ -3191,11 +3262,22 @@ document.querySelectorAll('.ch-tab').forEach(btn => {
     });
 });
 updateChapter2Lock();
+updateChapter3Lock();
 
 /* ─────────────────────────────────────────────
    FILTER BUTTONS
 ───────────────────────────────────────────── */
-function setupFilter(barId, gridId) {
+function renumberVisibleCh3Cards() {
+    const grid = document.getElementById('ch3-grid');
+    if (!grid) return;
+    const visible = grid.querySelectorAll('.card:not(.hidden)');
+    visible.forEach((card, index) => {
+        const numEl = card.querySelector('.problem-num');
+        if (numEl) numEl.textContent = '#' + String(index + 1).padStart(2, '0');
+    });
+}
+
+function setupFilter(barId, gridId, onFilter) {
     document.querySelectorAll(`#${barId} .filter-btn`).forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll(`#${barId} .filter-btn`).forEach(b => b.classList.remove('active'));
@@ -3204,11 +3286,13 @@ function setupFilter(barId, gridId) {
             document.querySelectorAll(`#${gridId} .card`).forEach(card => {
                 card.classList.toggle('hidden', topic !== 'all' && card.dataset.topic !== topic);
             });
+            if (typeof onFilter === 'function') onFilter();
         });
     });
 }
 setupFilter('ch1-filter-bar', 'ch1-grid');
 setupFilter('ch2-filter-bar', 'ch2-grid');
+setupFilter('ch3-filter-bar', 'ch3-grid', renumberVisibleCh3Cards);
 
 /* ─────────────────────────────────────────────
    GUIDANCE TOGGLE
@@ -3246,12 +3330,17 @@ function updateProgress() {
         t1 = ch1.length;
     const d2 = solvedIds.ch2.size,
         t2 = ch2.length;
+    const d3 = solvedIds.ch3.size,
+        t3 = ch3.length;
     document.getElementById('ch1-prog-text').textContent = `${d1} / ${t1} solved`;
     document.getElementById('ch1-prog-fill').style.width = `${(d1 / t1) * 100}%`;
     document.getElementById('ch2-prog-text').textContent = `${d2} / ${t2} solved`;
     document.getElementById('ch2-prog-fill').style.width = `${(d2 / t2) * 100}%`;
-    document.getElementById('total-count').textContent = d1 + d2;
+    document.getElementById('ch3-prog-text').textContent = `${d3} / ${t3} solved`;
+    document.getElementById('ch3-prog-fill').style.width = `${(d3 / t3) * 100}%`;
+    document.getElementById('total-count').textContent = d1 + d2 + d3;
     updateChapter2Lock();
+    updateChapter3Lock();
 }
 
 // Initial sync after restoring solved state from localStorage

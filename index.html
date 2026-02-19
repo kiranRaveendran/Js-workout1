@@ -64,6 +64,10 @@
     .ch2-fb [data-topic="switch"].active { background: #f5a623; border-color: #f5a623; color: #0a0a12; }
     .ch2-fb [data-topic="loops"].active { background: #2dd4bf; border-color: #2dd4bf; color: #0a0a12; }
     .ch2-fb [data-topic="control"].active { background: #22d3a5; border-color: #22d3a5; color: #0a0a12; }
+    .ch3-fb [data-topic="definition"].active { background: #5b5bf5; border-color: #5b5bf5; color: #fff; }
+    .ch3-fb [data-topic="execution"].active { background: #f5a623; border-color: #f5a623; color: #0a0a12; }
+    .ch3-fb [data-topic="scope"].active { background: #2dd4bf; border-color: #2dd4bf; color: #0a0a12; }
+    .ch3-fb [data-topic="context"].active { background: #c084fc; border-color: #c084fc; color: #fff; }
     .guidance-panel { display: none; background: rgba(91,91,245,0.06); border: 1px solid rgba(91,91,245,0.2); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
     .guidance-panel.open { display: block; }
     .guidance-toggle.open svg { transform: rotate(180deg); }
@@ -86,6 +90,9 @@
     .tag-switch { background: rgba(245,166,35,0.15); color: #f5c623; border-color: rgba(245,166,35,0.3); }
     .tag-loops { background: rgba(45,212,191,0.15); color: #2dd4bf; border-color: rgba(45,212,191,0.3); }
     .tag-control { background: rgba(34,211,165,0.15); color: #22d3a5; border-color: rgba(34,211,165,0.3); }
+    .tag-definition { background: rgba(91,91,245,0.18); color: #8b8bf8; border-color: rgba(91,91,245,0.3); }
+    .tag-execution { background: rgba(245,166,35,0.15); color: #f5a623; border-color: rgba(245,166,35,0.3); }
+    .tag-context { background: rgba(192,132,252,0.15); color: #c084fc; border-color: rgba(192,132,252,0.3); }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
     .card { animation: fadeUp 0.4s ease both; background: #1a1a2e; border: 1px solid #2a2a45; border-radius: 16px; overflow: hidden; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; }
     .card:hover { transform: translateY(-3px); border-color: rgba(91,91,245,0.4); box-shadow: 0 8px 40px rgba(91,91,245,0.12); }
@@ -128,7 +135,7 @@
   <!-- Sticky Header -->
   <header class="site-header sticky top-0 z-[100] h-16 flex items-center px-6 border-b border-border bg-bg/92 backdrop-blur-xl" style="border-color: var(--tw-border);">
     <a href="#" class="header-logo flex items-center gap-2.5 shrink-0 no-underline">
-      <div class="logo-icon w-9 h-9   bg-accent flex items-center justify-center text-sm font-extrabold text-white font-mono shrink-0 "> <img width="100" src="images/edure-logo.jpg" alt=""></div>
+      <div class="logo-icon w-9 h-9 rounded-lg bg-accent flex items-center justify-center text-sm font-extrabold text-white font-mono shrink-0">JS</div>
       <span class="logo-text font-extrabold text-[0.93rem] tracking-tight text-text">Workout <span class="text-accent">Problems</span></span>
     </a>
     <div class="hdr-div w-px h-7 bg-border mx-5 shrink-0"></div>
@@ -140,14 +147,16 @@
       <button type="button" class="ch-tab ch-tab-locked flex items-center gap-1.5 bg-transparent border border-border rounded-[10px] text-muted font-outfit text-[0.82rem] font-semibold py-1.5 px-3.5 transition-all whitespace-nowrap shrink-0 hover:border-accent hover:text-text" data-chapter="2" title="Complete all Chapter 1 problems to unlock" aria-disabled="true">
         <span class="ch-num font-mono text-[0.66rem] bg-white/15 py-0.5 px-1.5 rounded-md">02</span> Control Statements <span class="ch-lock-icon" aria-hidden="true">🔒</span>
       </button>
+      <button type="button" class="ch-tab ch-tab-locked flex items-center gap-1.5 bg-transparent border border-border rounded-[10px] text-muted font-outfit text-[0.82rem] font-semibold py-1.5 px-3.5 transition-all whitespace-nowrap shrink-0 hover:border-accent hover:text-text" data-chapter="3" title="Complete all Chapter 2 problems to unlock" aria-disabled="true">
+        <span class="ch-num font-mono text-[0.66rem] bg-white/15 py-0.5 px-1.5 rounded-md">03</span> JS Functions <span class="ch-lock-icon" aria-hidden="true">🔒</span>
+      </button>
     </nav>
     <div class="hdr-solved ml-auto shrink-0 font-mono text-[0.7rem] text-muted bg-surface border border-border rounded-lg py-1.5 px-3 whitespace-nowrap">Total solved: <span id="total-count" class="text-accent font-bold">0</span></div>
   </header>
 
   <!-- Chapter 1 -->
   <section class="ch-section active relative z-10" id="chapter-1">
-    <div class="hero flex flex-col justify-center items-center text-center py-12 px-5 pt-[50px] pb-8">
-      <img width="300" src="images/edure-logo-2.png" alt="">
+    <div class="hero text-center py-12 px-5 pt-[50px] pb-8">
       <div class="badge inline-flex items-center gap-1.5 font-mono text-[0.68rem] py-1.5 px-3.5 rounded-full tracking-widest uppercase mb-4" style="background: rgba(91,91,245,0.12); border: 1px solid rgba(91,91,245,0.35); color: #5b5bf5;">📖 Chapter 01</div>
       <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-2.5" style="color: #e8e8f0;">JS <span class="hl" style="color: #5b5bf5;">Fundamentals</span></h1>
       <p class="subtitle text-base font-light max-w-[520px] mx-auto" style="color: #6b6b88;">33 problems covering variables, scope, operators, data types &amp; built-in functions.</p>
@@ -172,8 +181,7 @@
 
   <!-- Chapter 2 (same layout as Chapter 1: hero → filter bar → progress → grid) -->
   <section class="ch-section relative z-10" id="chapter-2">
-    <div class="hero flex flex-col justify-center items-center  text-center py-12 px-5 pt-[50px] pb-8">
-      <img width="300" src="images/edure-logo-2.png" alt="">
+    <div class="hero text-center py-12 px-5 pt-[50px] pb-8">
       <div class="badge inline-flex items-center gap-1.5 font-mono text-[0.68rem] py-1.5 px-3.5 rounded-full tracking-widest uppercase mb-4" style="background: rgba(91,91,245,0.12); border: 1px solid rgba(91,91,245,0.35); color: #5b5bf5;">📖 Chapter 02</div>
       <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-2.5" style="color: #e8e8f0;">Control <span class="hl" style="color: #5b5bf5;">Statements</span></h1>
       <p class="subtitle text-base font-light max-w-[520px] mx-auto" style="color: #6b6b88;">25 problems on if/else, ternary, switch, for, while, do-while, break &amp; continue.</p>
@@ -182,7 +190,7 @@
       <button type="button" class="filter-btn active bg-surface border border-border text-muted py-1.5 px-4 rounded-lg font-outfit text-[0.82rem] font-semibold cursor-pointer transition-all hover:bg-accent hover:border-accent hover:text-white" data-topic="all">All (25)</button>
       <button type="button" class="filter-btn bg-surface border border-border text-muted py-1.5 px-4 rounded-lg font-outfit text-[0.82rem] font-semibold cursor-pointer transition-all hover:bg-accent hover:border-accent hover:text-white" data-topic="if">if / else &amp; ternary</button>
       <button type="button" class="filter-btn bg-surface border border-border text-muted py-1.5 px-4 rounded-lg font-outfit text-[0.82rem] font-semibold cursor-pointer transition-all hover:bg-accent hover:border-accent hover:text-white" data-topic="switch">switch</button>
-      <button type="button" class="filter-btn bg-surface border border-border py-1.5 px-4 rounded-lg font-outfit text-[0.82rem] font-semibold cursor-pointer transition-all hover:bg-accent hover:border-accent hover:text-white" data-topic="loops" style="background: #12121e; border-color: #2a2a45; color: #6b6b88;">Loops (14)</button>
+      <button type="button" class="filter-btn bg-surface border border-border text-muted py-1.5 px-4 rounded-lg font-outfit text-[0.82rem] font-semibold cursor-pointer transition-all hover:bg-accent hover:border-accent hover:text-white" data-topic="loops">Loops (14)</button>
       <button type="button" class="filter-btn bg-surface border border-border text-muted py-1.5 px-4 rounded-lg font-outfit text-[0.82rem] font-semibold cursor-pointer transition-all hover:bg-accent hover:border-accent hover:text-white" data-topic="control">break &amp; continue</button>
     </div>
     <div class="progress-section max-w-[900px] mx-auto mb-8 px-5 relative z-10">
@@ -194,7 +202,30 @@
     <div class="problems-grid grid gap-5 max-w-[1300px] mx-auto px-5 pb-20 relative z-10" style="grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));" id="ch2-grid"></div>
   </section>
 
-  <footer class="text-center py-7 text-muted text-[0.77rem] font-mono relative z-10 border-t border-border"><span class="text-accent">JS Workout Problems</span> &nbsp;·&nbsp; <span class="text-accent">Ch.1</span> JS Fundamentals &nbsp;·&nbsp; <span class="text-accent">Ch.2</span> Control Statements</footer>
+  <!-- Chapter 3: JS Functions -->
+  <section class="ch-section relative z-10" id="chapter-3">
+    <div class="hero text-center py-12 px-5 pt-[50px] pb-8">
+      <div class="badge inline-flex items-center gap-1.5 font-mono text-[0.68rem] py-1.5 px-3.5 rounded-full tracking-widest uppercase mb-4" style="background: rgba(91,91,245,0.12); border: 1px solid rgba(91,91,245,0.35); color: #5b5bf5;">📖 Chapter 03</div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-2.5" style="color: #e8e8f0;">JS <span class="hl" style="color: #5b5bf5;">Functions</span></h1>
+      <p class="subtitle text-base font-light max-w-[520px] mx-auto" style="color: #6b6b88;">40 problems on definition &amp; syntax, execution &amp; control flow, scope &amp; memory, and context &amp; binding.</p>
+    </div>
+    <div class="filter-bar ch3-fb flex gap-2 justify-center flex-wrap py-6 px-5 pb-8 relative z-10" id="ch3-filter-bar">
+      <button type="button" class="filter-btn active bg-surface border border-border text-muted py-1.5 px-4 rounded-lg font-outfit text-[0.82rem] font-semibold cursor-pointer transition-all hover:bg-accent hover:border-accent hover:text-white" data-topic="all">All (40)</button>
+      <button type="button" class="filter-btn bg-surface border border-border text-muted py-1.5 px-4 rounded-lg font-outfit text-[0.82rem] font-semibold cursor-pointer transition-all hover:bg-accent hover:border-accent hover:text-white" data-topic="definition">Definition &amp; Syntax</button>
+      <button type="button" class="filter-btn bg-surface border border-border text-muted py-1.5 px-4 rounded-lg font-outfit text-[0.82rem] font-semibold cursor-pointer transition-all hover:bg-accent hover:border-accent hover:text-white" data-topic="execution">Execution &amp; Control</button>
+      <button type="button" class="filter-btn bg-surface border border-border text-muted py-1.5 px-4 rounded-lg font-outfit text-[0.82rem] font-semibold cursor-pointer transition-all hover:bg-accent hover:border-accent hover:text-white" data-topic="scope">Scope &amp; Memory</button>
+      <button type="button" class="filter-btn bg-surface border border-border text-muted py-1.5 px-4 rounded-lg font-outfit text-[0.82rem] font-semibold cursor-pointer transition-all hover:bg-accent hover:border-accent hover:text-white" data-topic="context">Context &amp; Binding</button>
+    </div>
+    <div class="progress-section max-w-[900px] mx-auto mb-8 px-5 relative z-10">
+      <div class="progress-label flex justify-between text-[0.78rem] text-muted mb-2 font-mono"><span>Chapter 3 Progress</span><span id="ch3-prog-text">0 / 40 solved</span></div>
+      <div class="progress-bar-bg rounded-[10px] h-2 overflow-hidden" style="background: #12121e; border: 1px solid #2a2a45;">
+        <div class="progress-bar-fill h-full rounded-[10px] transition-[width] duration-500 ease-out" id="ch3-prog-fill" style="width:0%; background: linear-gradient(90deg, #5b5bf5, #2dd4bf);"></div>
+      </div>
+    </div>
+    <div class="problems-grid grid gap-5 max-w-[1300px] mx-auto px-5 pb-20 relative z-10" style="grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));" id="ch3-grid"></div>
+  </section>
+
+  <footer class="text-center py-7 text-muted text-[0.77rem] font-mono relative z-10 border-t border-border"><span class="text-accent">JS Workout Problems</span> &nbsp;·&nbsp; <span class="text-accent">Ch.1</span> JS Fundamentals &nbsp;·&nbsp; <span class="text-accent">Ch.2</span> Control Statements &nbsp;·&nbsp; <span class="text-accent">Ch.3</span> JS Functions</footer>
 
   <div id="outdated-warning" style="display:none; position:fixed; top:72px; left:50%; transform:translateX(-50%); z-index:999; background:#f55b5b; color:#fff; padding:10px 20px; border-radius:8px; font-size:0.85rem; font-weight:600; box-shadow:0 4px 20px rgba(0,0,0,0.3);">Outdated: only <span id="outdated-count">?</span> problems loaded. Hard refresh (Ctrl+Shift+R) to load all 25.</div>
   <script src="app.js?v=27"></script>
